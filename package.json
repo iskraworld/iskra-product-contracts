@@ -4,6 +4,7 @@
   "description": "A boilerplate repository to get you started with Hardhat and Ethereum development",
   "scripts": {
     "test": "hardhat test",
+    "abi": "hardhat export-abi",
     "format": "prettier --write 'contracts/**/*.sol' 'test/**/*.js'",
     "lint": "prettier --check 'contracts/**/*.sol' 'test/**/*.js'"
   },
@@ -31,6 +32,7 @@
     "chai": "^4.2.0",
     "ethers": "^5.6.9",
     "hardhat": "^2.9.9",
+    "hardhat-abi-exporter": "^2.8.0",
     "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^2.7.1",
     "prettier-plugin-solidity": "^1.0.0-beta.24",
