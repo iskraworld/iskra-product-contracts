@@ -1,5 +1,6 @@
 ISKRA MultiToken(ERC1155) Contract and Commands
 ===
+*Before jump into further, [the happy case test shell](.multitoken.test.sh) is highly recommended to execute*
 
 ## Environments
 ### compile
