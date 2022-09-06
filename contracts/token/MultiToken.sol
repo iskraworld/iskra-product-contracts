@@ -58,29 +58,12 @@ contract MultiToken is
         _unpause();
     }
 
-    uint256 public constant TYPE_NF_BIT = 1 << 255;
-
-    function isNonFungible(uint256 _id) public pure returns (bool) {
-        return _id & TYPE_NF_BIT == TYPE_NF_BIT;
-    }
-
-    function requireNFT(uint256 amount, uint256 _totalSupply) private pure {
-        require(
-            amount == 1,
-            "MultiToken: the amount of non-fungible token should be 1"
-        );
-        require(_totalSupply == 0, "MultiToken: the token already minted");
-    }
-
     function mint(
         address account,
         uint256 id,
         uint256 amount,
         bytes memory data
     ) public onlyRole(MINTER_ROLE) {
-        if (isNonFungible(id)) {
-            requireNFT(amount, totalSupply(id));
-        }
         _mint(account, id, amount, data);
     }
 
@@ -90,17 +73,6 @@ contract MultiToken is
         uint256[] memory amounts,
         bytes memory data
     ) public onlyRole(MINTER_ROLE) {
-        require(
-            ids.length == amounts.length,
-            "ERC1155: ids and amounts length mismatch"
-        );
-        for (uint256 i = 0; i < ids.length; ++i) {
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-            if (isNonFungible(id)) {
-                requireNFT(amount, totalSupply(id));
-            }
-        }
         _mintBatch(to, ids, amounts, data);
     }
 
