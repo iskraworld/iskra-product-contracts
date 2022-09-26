@@ -1,0 +1,29 @@
+name: ABI
+
+on: pull_request
+
+jobs:
+  abi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+      - name: Generate ABI
+        run: |
+          rm -rf abis
+          npm run abi
+      - name: Check updated
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          else
+            echo "error: ABIs are outdated!"
+            exit 1
+          fi
