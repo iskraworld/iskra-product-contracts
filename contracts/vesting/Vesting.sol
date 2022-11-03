@@ -13,6 +13,7 @@ contract Vesting is OwnableUpgradeable {
         address beneficiary,
         uint256 amount,
         uint256 initialUnlocked,
+        uint256 unlockPeriodHours,
         uint256 duration,
         address token
     );
@@ -28,16 +29,13 @@ contract Vesting is OwnableUpgradeable {
         REVOKED
     }
 
-    /**
-     * @dev This contract is specific for iskra investors and employees.
-     * @dev This constants are fixed for it.
-     */
-    uint64 constant UNLOCK_PERIOD = 730 hours;
+    uint256 constant HOURS = 1 hours;
 
     IERC20 public token;
     address public beneficiary;
     uint256 public start;
     uint256 public end;
+    uint256 public unlockPeriod;
     uint256 public duration;
     uint256 public claimedAmount;
     uint256 public initialVestingAmount;
@@ -55,13 +53,14 @@ contract Vesting is OwnableUpgradeable {
      * @notice Tokens sent directly to this contract without using this function are not included in the vesting amount.
      * @param _beneficiary contract partner. The only one who can claim unlocked amount from this vesting.
      * @param _amount vesting amount.
-     * @param _duration the number of unlocking. Whole vesting duration becomes _duration * UNLOCK_PERIOD.
+     * @param _duration the number of unlocking. Whole vesting duration becomes _duration * unlockPeriod
      */
     function prepare(
         address _distributor,
         address _beneficiary,
         uint256 _amount,
         uint256 _initialUnlocked,
+        uint256 _unlockPeriodHours,
         uint256 _duration,
         address _token
     ) public virtual checkStatus(status == VestingStatus.CREATED) onlyOwner {
@@ -76,12 +75,14 @@ contract Vesting is OwnableUpgradeable {
             _amount >= _initialUnlocked,
             "Vesting: `_initialUnlocked` is greater than `_amount`"
         );
+        require(_unlockPeriodHours > 0, "Vesting: _unlockPeriod is zero");
         require(
             _amount >= _duration,
             "Vesting: _amount must be greater than _duration"
         );
 
         token = IERC20(_token);
+        unlockPeriod = _unlockPeriodHours * HOURS;
         duration = _duration;
         beneficiary = _beneficiary;
         initialVestingAmount = _amount;
@@ -101,9 +102,14 @@ contract Vesting is OwnableUpgradeable {
             beneficiary,
             initialVestingAmount,
             initialUnlockedAmount,
+            _unlockPeriodHours,
             duration,
             _token
         );
+    }
+
+    function getUnlockPeriodHours() public view returns (uint256) {
+        return unlockPeriod / HOURS;
     }
 
     /**
@@ -119,7 +125,7 @@ contract Vesting is OwnableUpgradeable {
         require(_start > 0, "Vesting: `_start` is 0");
 
         start = _start;
-        end = start + duration * UNLOCK_PERIOD;
+        end = start + duration * unlockPeriod;
         status = VestingStatus.ACTIVE;
 
         emit SetStart(start);
@@ -199,13 +205,13 @@ contract Vesting is OwnableUpgradeable {
         );
 
         if (block.timestamp <= start) {
-            return start + UNLOCK_PERIOD;
+            return start + unlockPeriod;
         }
         if (block.timestamp >= end) {}
         return
             start +
-            ((block.timestamp - start) / UNLOCK_PERIOD + 1) *
-            UNLOCK_PERIOD;
+            ((block.timestamp - start) / unlockPeriod + 1) *
+            unlockPeriod;
     }
 
     /**
@@ -296,6 +302,6 @@ contract Vesting is OwnableUpgradeable {
         if (block.timestamp >= end) {
             return duration;
         }
-        return (block.timestamp - start) / UNLOCK_PERIOD;
+        return (block.timestamp - start) / unlockPeriod;
     }
 }
