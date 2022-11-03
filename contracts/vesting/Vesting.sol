@@ -75,7 +75,7 @@ contract Vesting is OwnableUpgradeable {
             _amount >= _initialUnlocked,
             "Vesting: `_initialUnlocked` is greater than `_amount`"
         );
-        require(_unlockPeriodHours > 0, "Vesting: _unlockPeriod is zero");
+        require(_unlockPeriodHours > 0, "Vesting: _unlockPeriodHours is zero");
         require(
             _amount >= _duration,
             "Vesting: _amount must be greater than _duration"
