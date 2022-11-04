@@ -72,6 +72,7 @@ task("vesting:prepare", "prepare vesting contract")
   .addOptionalParam("initial", "the initial unlocked amount", "0")
   .addOptionalParam("vesting", "the vesting contract address", "")
   .addOptionalParam("token", "the target token address", "")
+  .addOptionalParam("period", "unlock period(default=730 hours)", "730")
   .addOptionalParam("duration", "the vesting duration(default=36)", "36")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
@@ -92,6 +93,7 @@ task("vesting:prepare", "prepare vesting contract")
         taskArgs.beneficiary,
         taskArgs.amount,
         taskArgs.initial,
+        taskArgs.period,
         taskArgs.duration,
         taskArgs.token
       );
@@ -140,6 +142,7 @@ task(
   )
   .addOptionalParam("beacon", "the beacon address", "")
   .addOptionalParam("token", "the target token address", "")
+  .addOptionalParam("period", "unlock period(default=730 hours)", "730")
   .addOptionalParam("duration", "the vesting duration(default=36)", "36")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
@@ -165,6 +168,7 @@ task(
         taskArgs.beneficiary,
         taskArgs.amount,
         taskArgs.initial,
+        taskArgs.period,
         taskArgs.duration,
         gameToken.address
       );
