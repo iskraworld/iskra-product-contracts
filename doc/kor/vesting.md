@@ -159,11 +159,12 @@ npx hardhat vesting:deploy --network baobab
   - `--initial`(optional): 초기 unlock 물량을 설정합니다. amount-initial 만큼의 물량이 lock된 채 시작합니다.
   - `--vesting`(optional): vesting proxy 컨트랙트를 지정합니다. 생략시 `~/.iskra-console/deployed/vesting-address.json`의 값을 사용합니다.
   - `--token`(optional): 베스팅할 토큰을 지정합니다. 생략시 `~/.iskra-console/deployed/gametoken-address.json`의 값을 사용합니다.
-  - `--duration`(optional): 베스팅 총 기간을 설정합니다. 730시간 단위입니다. 생략시 기본값 36을 사용합니다.
+  - `--period`(optional): 베스팅 unlock 단위 시간을 설정합니다. 이 시간마다 일정 물량이 unlock이 됩니다. 기본값은 730이고, 단위는 시간입니다.
+  - `--duration`(optional): 베스팅 총 기간을 설정합니다. period 기간을 총 몇 번 할지 설정합니다. 기본값은 36입니다. (730시간 * 36 = 3년)
   
 ```
 npx hardhat gametoken:approve [--signer [signer] --password [password]] --spender [vesting proxy contract address] --amount [amount] [--token [game token address]]
-npx hardhat vesting:prepare [--signer [signer] --password [password]] --beneficiary [a beneficiary address] --amount [amount] [--initial [initial unlocked amount]] [--vesting [vesting proxy]] [--token [game token]] [--duration [duration]]
+npx hardhat vesting:prepare [--signer [signer] --password [password]] --beneficiary [a beneficiary address] --amount [amount] [--initial [initial unlocked amount]] [--vesting [vesting proxy]] [--token [game token]] [--period [unlock period hours]] [--duration [duration]]
 
 ex)
 npx hardhat --network baobab gametoken:approve --spender 0x1A61b1cbe03aC8f6Fd8648de04C5b30bb85E38a0 --amount 1000
@@ -284,7 +285,8 @@ npx hardhat --network baobab vesting:setstart --start "2022-05-01 09:00:00"
   - `--amount`: 베스팅 물량을 설정합니다.
   - `--start`: start 시각을 지정합니다. `yyyy-mm-dd hh:mm:ss` 포멧으로 값을 주어야 하고, 로컬 타임존 기준의 시각을 입력합니다.  - `--initial`(optional): 초기 unlock 물량을 설정합니다. amount-initial 만큼의 물량이 lock된 채 시작합니다.
   - `--token`(optional): 베스팅할 토큰을 지정합니다. 생략시 `~/.iskra-console/deployed/gametoken-address.json`의 값을 사용합니다.
-  - `--duration`(optional): 베스팅 총 기간을 설정합니다. 730시간 단위입니다. 생략시 기본값 36을 사용합니다.
+  - `--period`(optional): 베스팅 unlock 단위 시간을 설정합니다. 이 시간마다 일정 물량이 unlock이 됩니다. 기본값은 730이고, 단위는 시간입니다.
+  - `--duration`(optional): 베스팅 총 기간을 설정합니다. period 기간을 총 몇 번 할지 설정합니다. 기본값은 36입니다. (730시간 * 36 = 3년)
   - `--beacon`(optional): 기 배포된 beacon 컨트랙트를 지정합니다. 생략시 `~/.iskra-console/deployed/vesting-impl-address.json`의 beacon 주소를 사용합니다.
 
 ```

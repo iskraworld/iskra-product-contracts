@@ -76,6 +76,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -86,6 +87,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         );
@@ -107,6 +109,7 @@ describe("Vesting contract", function () {
           constants.ZERO_ADDRESS,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -120,6 +123,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -134,6 +138,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -148,8 +153,24 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           constants.ZERO_ADDRESS
+        )
+      ).to.be.reverted;
+    });
+
+    it("invalid initialization; invalid period", async function () {
+      await gameToken.approve(vesting.address, toTokenAmount(300_000));
+      await expect(
+        vesting.prepare(
+          owner.address,
+          beneficiary1.address,
+          300_000,
+          0,
+          0,
+          36,
+          gameToken.address
         )
       ).to.be.reverted;
     });
@@ -162,6 +183,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           0,
           gameToken.address
         )
@@ -176,6 +198,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           59,
           0,
+          730,
           60,
           gameToken.address
         )
@@ -190,6 +213,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           0,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -204,6 +228,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           vesting.address
         )
@@ -220,6 +245,7 @@ describe("Vesting contract", function () {
             beneficiary1.address,
             300_000,
             0,
+            730,
             36,
             vesting.address
           )
@@ -235,6 +261,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -285,6 +312,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -344,6 +372,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -444,6 +473,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         vestingAmount,
         0,
+        730,
         times,
         gameToken.address
       );
@@ -628,6 +658,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         400_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -669,6 +700,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -710,6 +742,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -783,6 +816,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -830,6 +864,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -843,6 +878,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -858,6 +894,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -880,6 +917,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         300_000,
         0,
+        730,
         36,
         gameToken.address
       );
@@ -981,6 +1019,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -993,6 +1032,7 @@ describe("Vesting contract", function () {
             beneficiary1.address,
             300_000,
             0,
+            730,
             36,
             gameToken.address
           )
@@ -1003,6 +1043,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         );
@@ -1024,6 +1065,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         )
@@ -1034,6 +1076,7 @@ describe("Vesting contract", function () {
           beneficiary1.address,
           300_000,
           0,
+          730,
           36,
           gameToken.address
         );
@@ -1063,6 +1106,7 @@ describe("Vesting contract", function () {
         beneficiary1.address,
         vestingAmount,
         initialAmount,
+        730,
         36,
         gameToken.address
       );
