@@ -68,6 +68,7 @@ npx hardhat vesting:deploy_impl --network baobab
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
 ## `Vesting Implementation`, `Vesting Beacon` 배포하기
+- 사용 커맨드: `vesting:deploy_impl`
 - 이 컨트랙트들은 한 번만 배포하면 됩니다.
 - 스크립트를 실행하면 `Vesting Implementation`, `Vesting Beacon`가 한 번에 배포됩니다.
 - 다음 옵션을 지원합니다.
@@ -110,6 +111,7 @@ Tx Success
 - 배포할 때마다 이 정보는 파일에 over write 합니다.
 
 ## `Vesting Proxy` 배포하기
+- 사용 커맨드: `vesting:deploy`
 - 이 컨트랙트는 수혜자(beneficiary)별로 배포되어야 합니다.
 - 각 베스팅의 상태 정보들을 갖고 있고, 각 수혜자는 이 컨트랙트를 바라보게 됩니다.
 - 실제 배분되는 토큰을 소유하고 있는 컨트랙트입니다.
@@ -142,12 +144,14 @@ npx hardhat vesting:deploy --network baobab
 - 이후 컨트랙트 owner(배포자)는 `Prepare`를 수행할 수 있습니다.
 
 ## `Vesting Proxy` Prepare 하기
+- 사용 커맨드: `vesting:prepare`
 - 배포된 초기 상태의 `Vesting Proxy`에 다음 정보를 세팅하는 작업을 `Prepare`라고 합니다.
   - `beneficiary`: 베스팅 수혜자
   - `amount`: 베스팅 물량
   - `initial`: 최초 unlock 상태로 배포할 물량
   - `token`: 베스팅 받을 토큰
-  - `duration`: 베스팅 기간. 단위는 730 시간. 생략하면 36 개월(1 개월은 730 시간을 단위로 함)
+  - `period`: unlock 단위 시간
+  - `duration`: 총 베스팅 기간
 - 이 작업을 수행할 때, owner가 가지고 있는 token의 amount 만큼의 수량이 `Vesting Proxy`로 옮겨집니다.
 - 따라서 이 작업을 수행하기 전에 먼저 해당 토큰의 `approve`를 먼저 수행해야 합니다.
 - 다음 옵션을 지원합니다.
@@ -156,7 +160,7 @@ npx hardhat vesting:deploy --network baobab
   - `--password`(optional): 트랜잭션을 수행할 지갑의 암호를 입력합니다.
   - `--beneficiary`: 베스팅 수혜자를 설정합니다.
   - `--amount`: 베스팅 물량을 설정합니다.
-  - `--initial`(optional): 초기 unlock 물량을 설정합니다. amount-initial 만큼의 물량이 lock된 채 시작합니다.
+  - `--initial`(optional): 초기 unlock 물량을 설정합니다. (amount - initial) 만큼의 물량이 lock된 채 시작합니다.
   - `--vesting`(optional): vesting proxy 컨트랙트를 지정합니다. 생략시 `~/.iskra-console/deployed/vesting-address.json`의 값을 사용합니다.
   - `--token`(optional): 베스팅할 토큰을 지정합니다. 생략시 `~/.iskra-console/deployed/gametoken-address.json`의 값을 사용합니다.
   - `--period`(optional): 베스팅 unlock 단위 시간을 설정합니다. 이 시간마다 일정 물량이 unlock이 됩니다. 기본값은 730이고, 단위는 시간입니다.
@@ -258,6 +262,7 @@ Tx Success
 ```
 
 ## `Vesting Proxy` Setstart 하기
+- 사용 커맨드: `vesting:setstart`
 - 베스팅 시작 시각을 설정합니다.
 - 이 작업을 수행하기 전에 반드시 prepared 상태여야 합니다. (Prepare를 먼저 수행해야 함)
 - 현재 시각이 설정한 start 시각이 되면, 베스팅을 시작합니다. 설정한 start 시각 + 730시간이 지나면 첫 토큰이 unlock됩니다.
@@ -276,6 +281,7 @@ npx hardhat --network baobab vesting:setstart --start "2022-05-01 09:00:00"
 ```
 
 ## `Vesing Proxy` 한 번에 세팅하기
+- 사용 커맨드: `vesting:one_stop_setup`
 - `Vesting Proxy` 컨트랙트의 배포, prepare, setstart를 한 번에 수행할 수 있습니다.
 - 다음 옵션을 지원합니다.
   - `--network`(optional): 네트워크를 선택합니다. 사용가능 값: `[baobab, cypress, goerli, ethereum]`
