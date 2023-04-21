@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/interfaces/IERC1363.sol";
+import "@openzeppelin/contracts/interfaces/IERC1363Receiver.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
@@ -15,8 +17,9 @@ import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 //  - ERC20 basic functions
 //  - unlimited supply
 //  - mintable, burnable
+//  - IERC1363Receiver feature
 //  - defense for transferring tokens to the token contract itself
-contract UtilityToken is IERC20Metadata, IERC165, ERC20Burnable, Ownable2Step {
+contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
     using Address for address;
 
     mapping(address => bool) public minters;
@@ -45,6 +48,7 @@ contract UtilityToken is IERC20Metadata, IERC165, ERC20Burnable, Ownable2Step {
     {
         return
             interfaceId == type(IERC20Metadata).interfaceId ||
+            interfaceId == type(IERC1363).interfaceId ||
             interfaceId == type(IERC165).interfaceId ||
             interfaceId == type(IERC20).interfaceId;
     }
@@ -81,6 +85,76 @@ contract UtilityToken is IERC20Metadata, IERC165, ERC20Burnable, Ownable2Step {
         _burn(account, amount);
     }
 
+    function transferAndCall(address recipient, uint256 amount)
+        public
+        override
+        returns (bool)
+    {
+        return transferAndCall(recipient, amount, "");
+    }
+
+    function transferAndCall(
+        address recipient,
+        uint256 amount,
+        bytes memory data
+    ) public override returns (bool) {
+        transfer(recipient, amount);
+        require(
+            _checkOnTransferReceived(_msgSender(), recipient, amount, data),
+            "ERC1363: _checkAndCallTransfer reverts"
+        );
+        return true;
+    }
+
+    function transferFromAndCall(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) public override returns (bool) {
+        return transferFromAndCall(sender, recipient, amount, "");
+    }
+
+    function transferFromAndCall(
+        address sender,
+        address recipient,
+        uint256 amount,
+        bytes memory data
+    ) public override returns (bool) {
+        transferFrom(sender, recipient, amount);
+        require(
+            _checkOnTransferReceived(sender, recipient, amount, data),
+            "ERC1363: _checkAndCallTransfer reverts"
+        );
+        return true;
+    }
+
+    function approveAndCall(address, uint256)
+        external
+        pure
+        override
+        returns (bool)
+    {
+        require(
+            false,
+            "UtilityToken: does not support approveAndCall due to security issue of approve"
+        );
+
+        return false;
+    }
+
+    function approveAndCall(
+        address,
+        uint256,
+        bytes memory
+    ) external pure override returns (bool) {
+        require(
+            false,
+            "UtilityToken: does not support approveAndCall due to security issue of approve"
+        );
+
+        return false;
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -91,5 +165,25 @@ contract UtilityToken is IERC20Metadata, IERC165, ERC20Burnable, Ownable2Step {
             "cannot transfer tokens to the token contract"
         );
         super._beforeTokenTransfer(from, to, amount);
+    }
+
+    function _checkOnTransferReceived(
+        address sender,
+        address recipient,
+        uint256 amount,
+        bytes memory data
+    ) internal returns (bool) {
+        if (!recipient.isContract()) {
+            return false;
+        }
+
+        bytes4 retval = IERC1363Receiver(recipient).onTransferReceived(
+            _msgSender(),
+            sender,
+            amount,
+            data
+        );
+        return (retval ==
+            IERC1363Receiver(recipient).onTransferReceived.selector);
     }
 }

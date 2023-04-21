@@ -4,6 +4,9 @@ const {
   shouldBehaveLikeERC20Transfer,
   shouldBehaveLikeERC20Approve,
 } = require("./ERC20/ERC20.behavior");
+const {
+  shouldBehaveLikeERC1363TransferAndCall,
+} = require("./ERC20/ERC1363.behavior");
 
 describe("GameToken contract", function () {
   const initialSupply = 100000000;
@@ -81,5 +84,22 @@ describe("GameToken contract", function () {
         return this.token.connect(owner.signer).approve(spender, amount);
       }
     );
+  });
+
+  describe("ERC1363TransferAndCall behavior", function () {
+    const initialHolder = {};
+    const spender = {};
+    const recipient = {};
+
+    beforeEach(async function () {
+      initialHolder.signer = owner;
+      initialHolder.address = owner.address;
+      spender.signer = user1;
+      spender.address = user1.address;
+      recipient.signer = user2;
+      recipient.address = user2.address;
+    });
+
+    shouldBehaveLikeERC1363TransferAndCall(initialHolder, spender, recipient);
   });
 });
