@@ -7,6 +7,12 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
+// MultiToken features
+//  - ERC1155 basic functions
+//  - role base
+//  - mintable, not burnable
+//  - pausable
+//  - defense for transferring tokens to the token contract itself
 contract MultiToken is
     ERC1155URIStorage,
     AccessControl,
