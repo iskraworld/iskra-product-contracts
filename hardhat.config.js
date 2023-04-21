@@ -25,7 +25,7 @@ module.exports = {
     })
   },
   solidity: {
-    version: "0.8.2",
+    version: "0.8.7",
     settings: {
       optimizer: {
         enabled: true,
@@ -71,7 +71,7 @@ module.exports = {
     path: "abis",
     clear: true,
     flat: true,
-    only: ["GameToken","MultiToken","Vesting"],
+    only: ["GameToken","GovernanceToken", "UtilityToken", "MultiToken","Vesting"],
     except: ["mock"],
     spacing: 2,
     pretty: false
