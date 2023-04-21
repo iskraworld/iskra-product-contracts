@@ -14,6 +14,10 @@ const gameTokenAddressJson = path.join(
   deployedContractDir,
   "gametoken-address.json"
 );
+const utilityTokenAddressJson = path.join(
+  deployedContractDir,
+  "utilitytoken-address.json"
+);
 const vestingImplAddressJson = path.join(
   deployedContractDir,
   "vesting-impl-address.json"
@@ -65,6 +69,27 @@ async function getGameToken(address, wallet) {
   }
 
   return await ethers.getContractAt("GameToken", address, wallet);
+}
+
+async function getUtilityToken(address, wallet) {
+  if (address.length === 0) {
+    const fs = require("fs");
+
+    if (!fs.existsSync(utilityTokenAddressJson)) {
+      console.error("You need to deploy your contract first");
+      return;
+    }
+
+    const addressJson = fs.readFileSync(utilityTokenAddressJson);
+    address = JSON.parse(addressJson).UtilityTokenAddress;
+  }
+
+  if ((await ethers.provider.getCode(address)) === "0x") {
+    console.error("FAILED: You need to deploy your contract first");
+    process.exit(1);
+  }
+
+  return await ethers.getContractAt("UtilityToken", address, wallet);
 }
 
 async function getDeployedVestingBeaconAddress() {
@@ -130,6 +155,16 @@ function saveGameTokenAddress(token) {
   fs.writeFileSync(
     gameTokenAddressJson,
     JSON.stringify({ GameTokenAddress: token.address }, undefined, 2)
+  );
+}
+
+function saveUtilityTokenAddress(token) {
+  const fs = require("fs");
+  checkDeployDir(fs);
+
+  fs.writeFileSync(
+    utilityTokenAddressJson,
+    JSON.stringify({ UtilityTokenAddress: token.address }, undefined, 2)
   );
 }
 
@@ -249,6 +284,7 @@ async function sendBaseCoinTo(to, amount) {
 module.exports = {
   getMultiToken,
   getGameToken,
+  getUtilityToken,
   getDeployedVestingBeaconAddress,
   getDeployedVestingAddress,
   printArguments,
@@ -256,6 +292,7 @@ module.exports = {
   printQueryResult,
   saveMultiTokenAddress,
   saveGameTokenAddress,
+  saveUtilityTokenAddress,
   saveVestingImplAddress,
   saveVestingAddress,
   walletExist,

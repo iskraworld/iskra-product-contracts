@@ -1,4 +1,4 @@
-ISKRA GameToken(ERC20), MultiToken(ERC1155), Vesting Contracts and Commands
+ISKRA tokens(ERC20, ERC721, ERC1155), vesting contracts and commands
 ===
 *Before jump into further, [the happy case test shell](.multitoken.test.sh) is highly recommended to execute*
 
@@ -44,6 +44,7 @@ npm run lint
 ```
 
 ## Commands
+List all hardhat commands
 ```
 npx hardhat --help
 ```
@@ -71,6 +72,14 @@ ex)
 npx hardhat gametoken:deploy --name "Sample token" --symbol SMP --supply 1000000000
 ```
 For more information, please refer [GameToken](doc/kor/game_token.md)
+
+### utilitytoken
+```
+npx hardhat utilitytoken:deploy --name [name] --symbol [symbol] --minter [first minter address]
+ex)
+npx hardhat utilitytoken:deploy --name Candy --symbol CND --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
+```
+For more information, please refer [GameToken](doc/kor/utility_token.md)
 
 ### vesting
 ```

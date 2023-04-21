@@ -7,6 +7,7 @@ require("./tasks/wallet");
 require("./tasks/MultiToken.tx");
 require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
+require("./tasks/UtilityToken.tx");
 require("./tasks/Vesting.tx");
 require("hardhat-gas-reporter");
 
@@ -42,7 +43,7 @@ module.exports = {
       }
     },
     baobab: {
-      url: "https://api.baobab.klaytn.net:8651",
+      url: "https://public-en-baobab.klaytn.net",
       networkId: 1001,
       accounts: {
         mnemonic: "crater kiwi depth alley myth flag bleak swing fragile abandon pupil twist"

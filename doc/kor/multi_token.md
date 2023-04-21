@@ -1,7 +1,7 @@
 # ISKRA Multi Token(ERC1155) Contract
 
 ## 개요
-- `contracts/token/MultiToken.sol` 파일은 ERC1155 표준을 따르는 샘플 멀티 토큰 구현체로서, mint/burn/pause 기능을 갖춘 멀티 토큰입니다.
+- `contracts/token/ERC1155/MultiToken.sol` 파일은 ERC1155 표준을 따르는 샘플 멀티 토큰 구현체로서, mint/burn/pause 기능을 갖춘 멀티 토큰입니다.
 - 컨트랙트 자체엔 NFT(Non-fungible token)/FT(Fungible token)의 구분이 따로 없으며, 임의의 tokenID로 토큰을 생성할 수 있습니다.
 - 다만, command 스크립트에서는 supply가 1인 토큰을 NFT로 간주하여 추가 mint가 불가능하도록 되어 있습니다.
 
@@ -15,7 +15,7 @@
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
 ```
-git clone https://github.com/iskraworld/iskra-console-cmd.git
+git clone https://github.com/iskraworld/iskra-product-cmd.git
 ```
 <br>
 그런 후 의존성 모듈들을 설치합니다.

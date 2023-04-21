@@ -21,7 +21,7 @@
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
 ```
-git clone https://github.com/iskraworld/iskra-console-cmd.git
+git clone https://github.com/iskraworld/iskra-product-cmd.git
 ```
 <br>
 그런 후 의존성 모듈들을 설치합니다.
