@@ -6,8 +6,7 @@
 - minter는 무제한 발행이 가능합니다.
 - owner는 minter를 추가/삭제할 수 있습니다.
 - decimal은 18로 고정입니다.
-- 초기 배포되면 owner가 총 통화량을 모두 소유하게 됩니다.
-- IERC20, IKIP13, IKIP7, IERC165 표준 인터페이스를 따릅니다.
+- IERC20, IERC20Metadata, IERC165 표준 인터페이스를 따릅니다.
 - `iskra-product-cmd`에서는 ERC20 토큰의 `배포`, `mint`, `addMinter`, `removeMinter`, `approve`, `transfer` 기능을 수행할 수 있습니다.
 
 ## 빌드

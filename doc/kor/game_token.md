@@ -5,7 +5,7 @@
 - 배포시 초기 발행량이 정해지면, 추가 mint나 burn 기능이 불가능한 고정 통화량 토큰입니다.
 - decimal은 18로 고정입니다.
 - 초기 배포되면 owner가 총 통화량을 모두 소유하게 됩니다.
-- IERC20, IKIP13, IKIP7, IERC165 표준 인터페이스를 따릅니다.
+- IERC20, IERC20Metadata, IERC165 표준 인터페이스를 따릅니다.
 - `iskra-product-cmd`에서는 ERC20 토큰의 `배포`, `approve`, `transfer` 기능을 수행할 수 있습니다.
 
 ## 빌드
