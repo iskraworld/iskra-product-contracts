@@ -2,6 +2,7 @@ const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
 function shouldBehaveLikeERC1363TransferAndCall(
+  errPrefix,
   deployer,
   anotherAccount,
   recipient
@@ -74,7 +75,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             recipient.address,
             amount
           )
-        ).to.be.revertedWith("ERC1363: _checkAndCallTransfer reverts");
+        ).to.be.revertedWith(errPrefix + ": _checkAndCallTransfer reverts");
       });
 
       it("will fail when receivers do not return proper sig", async function () {
@@ -85,7 +86,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             receiver.address,
             amount
           )
-        ).to.be.revertedWith("ERC1363: _checkAndCallTransfer reverts");
+        ).to.be.revertedWith(errPrefix + ": _checkAndCallTransfer reverts");
       });
 
       it("will fail when receivers do not implement `ERC1363Receiver` properly", async function () {
@@ -172,7 +173,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             amount
           );
         await expect(tx).to.be.revertedWith(
-          "ERC1363: _checkAndCallTransfer reverts"
+          errPrefix + ": _checkAndCallTransfer reverts"
         );
       });
 
@@ -187,7 +188,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             amount
           );
         await expect(tx).to.be.revertedWith(
-          "ERC1363: _checkAndCallTransfer reverts"
+          errPrefix + ": _checkAndCallTransfer reverts"
         );
       });
 

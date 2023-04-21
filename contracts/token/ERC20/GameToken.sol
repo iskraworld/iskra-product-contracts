@@ -59,7 +59,7 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         transfer(recipient, amount);
         require(
             _checkOnTransferReceived(_msgSender(), recipient, amount, data),
-            "ERC1363: _checkAndCallTransfer reverts"
+            "GameToken: _checkAndCallTransfer reverts"
         );
         return true;
     }
@@ -81,7 +81,7 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         transferFrom(sender, recipient, amount);
         require(
             _checkOnTransferReceived(sender, recipient, amount, data),
-            "ERC1363: _checkAndCallTransfer reverts"
+            "GameToken: _checkAndCallTransfer reverts"
         );
         return true;
     }
@@ -120,7 +120,7 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
     ) internal override {
         require(
             to != address(this),
-            "cannot transfer tokens to the token contract"
+            "GameToken: cannot transfer tokens to the token contract"
         );
         super._beforeTokenTransfer(from, to, amount);
     }

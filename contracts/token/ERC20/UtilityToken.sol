@@ -36,7 +36,7 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
     }
 
     modifier onlyMinter() {
-        require(minters[msg.sender], "caller is not a minter");
+        require(minters[msg.sender], "UtilityToken: caller is not a minter");
         _;
     }
 
@@ -55,14 +55,17 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
 
     function addMinter(address newMinter) public onlyOwner {
         require(newMinter != address(0), "invalid address");
-        require(!minters[newMinter], "newMinter is already a minter");
+        require(
+            !minters[newMinter],
+            "UtilityToken: newMinter is already a minter"
+        );
 
         minters[newMinter] = true;
         emit MinterAdded(newMinter);
     }
 
     function removeMinter(address minter) public onlyOwner {
-        require(minters[minter], "given minter is not a minter");
+        require(minters[minter], "UtilityToken: given minter is not a minter");
         minters[minter] = false;
 
         emit MinterRemoved(minter);
@@ -101,7 +104,7 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
         transfer(recipient, amount);
         require(
             _checkOnTransferReceived(_msgSender(), recipient, amount, data),
-            "ERC1363: _checkAndCallTransfer reverts"
+            "UtilityToken: _checkAndCallTransfer reverts"
         );
         return true;
     }
@@ -123,7 +126,7 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
         transferFrom(sender, recipient, amount);
         require(
             _checkOnTransferReceived(sender, recipient, amount, data),
-            "ERC1363: _checkAndCallTransfer reverts"
+            "UtilityToken: _checkAndCallTransfer reverts"
         );
         return true;
     }
@@ -162,7 +165,7 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
     ) internal override {
         require(
             to != address(this),
-            "cannot transfer tokens to the token contract"
+            "UtilityToken: cannot transfer tokens to the token contract"
         );
         super._beforeTokenTransfer(from, to, amount);
     }

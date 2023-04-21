@@ -91,14 +91,14 @@ describe("UtilityToken contract", function () {
     it("basic", async function () {
       await expect(
         this.token.connect(user1).mint(user1.address, 1000000)
-      ).to.revertedWith("caller is not a minter");
+      ).to.revertedWith("UtilityToken: caller is not a minter");
       await this.token.addMinter(user1.address);
       await expect(this.token.connect(user1).mint(user1.address, 1000000)).not
         .to.reverted;
       await this.token.removeMinter(user1.address);
       await expect(
         this.token.connect(user1).mint(user1.address, 1000000)
-      ).to.revertedWith("caller is not a minter");
+      ).to.revertedWith("UtilityToken: caller is not a minter");
     });
   });
 
@@ -116,6 +116,11 @@ describe("UtilityToken contract", function () {
       recipient.address = user2.address;
     });
 
-    shouldBehaveLikeERC1363TransferAndCall(initialHolder, spender, recipient);
+    shouldBehaveLikeERC1363TransferAndCall(
+      "UtilityToken",
+      initialHolder,
+      spender,
+      recipient
+    );
   });
 });

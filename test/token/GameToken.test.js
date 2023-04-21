@@ -100,6 +100,11 @@ describe("GameToken contract", function () {
       recipient.address = user2.address;
     });
 
-    shouldBehaveLikeERC1363TransferAndCall(initialHolder, spender, recipient);
+    shouldBehaveLikeERC1363TransferAndCall(
+      "GameToken",
+      initialHolder,
+      spender,
+      recipient
+    );
   });
 });
