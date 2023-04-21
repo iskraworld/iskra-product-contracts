@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../token/MultiToken.sol";
+import "../token/ERC1155/MultiToken.sol";
 
 contract MultiTokenMock is MultiToken {
     constructor(string memory _uri) MultiToken(_uri) {
