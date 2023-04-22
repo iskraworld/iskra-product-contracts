@@ -92,12 +92,9 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         override
         returns (bool)
     {
-        require(
-            false,
+        revert(
             "GameToken: does not support approveAndCall due to security issue of approve"
         );
-
-        return false;
     }
 
     function approveAndCall(
@@ -105,12 +102,9 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         uint256,
         bytes memory
     ) external pure override returns (bool) {
-        require(
-            false,
+        revert(
             "GameToken: does not support approveAndCall due to security issue of approve"
         );
-
-        return false;
     }
 
     function _beforeTokenTransfer(
@@ -132,16 +126,29 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         bytes memory data
     ) internal returns (bool) {
         if (!recipient.isContract()) {
-            return false;
+            revert("GameToken: transfer to non contract address");
         }
 
-        bytes4 retval = IERC1363Receiver(recipient).onTransferReceived(
-            _msgSender(),
-            sender,
-            amount,
-            data
-        );
-        return (retval ==
-            IERC1363Receiver(recipient).onTransferReceived.selector);
+        try
+            IERC1363Receiver(recipient).onTransferReceived(
+                _msgSender(),
+                sender,
+                amount,
+                data
+            )
+        returns (bytes4 retval) {
+            return retval == IERC1363Receiver.onTransferReceived.selector;
+        } catch (bytes memory reason) {
+            if (reason.length == 0) {
+                revert(
+                    "GameToken: transfer to non ERC1363Receiver implementer"
+                );
+            } else {
+                /// @solidity memory-safe-assembly
+                assembly {
+                    revert(add(32, reason), mload(reason))
+                }
+            }
+        }
     }
 }

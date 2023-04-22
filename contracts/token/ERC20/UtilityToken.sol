@@ -137,12 +137,9 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
         override
         returns (bool)
     {
-        require(
-            false,
+        revert(
             "UtilityToken: does not support approveAndCall due to security issue of approve"
         );
-
-        return false;
     }
 
     function approveAndCall(
@@ -150,12 +147,9 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
         uint256,
         bytes memory
     ) external pure override returns (bool) {
-        require(
-            false,
+        revert(
             "UtilityToken: does not support approveAndCall due to security issue of approve"
         );
-
-        return false;
     }
 
     function _beforeTokenTransfer(
@@ -177,16 +171,29 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
         bytes memory data
     ) internal returns (bool) {
         if (!recipient.isContract()) {
-            return false;
+            revert("UtilityToken: transfer to non contract address");
         }
 
-        bytes4 retval = IERC1363Receiver(recipient).onTransferReceived(
-            _msgSender(),
-            sender,
-            amount,
-            data
-        );
-        return (retval ==
-            IERC1363Receiver(recipient).onTransferReceived.selector);
+        try
+            IERC1363Receiver(recipient).onTransferReceived(
+                _msgSender(),
+                sender,
+                amount,
+                data
+            )
+        returns (bytes4 retval) {
+            return retval == IERC1363Receiver.onTransferReceived.selector;
+        } catch (bytes memory reason) {
+            if (reason.length == 0) {
+                revert(
+                    "UtilityToken: transfer to non ERC1363Receiver implementer"
+                );
+            } else {
+                /// @solidity memory-safe-assembly
+                assembly {
+                    revert(add(32, reason), mload(reason))
+                }
+            }
+        }
     }
 }

@@ -75,7 +75,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             recipient.address,
             amount
           )
-        ).to.be.revertedWith(errPrefix + ": _checkAndCallTransfer reverts");
+        ).to.be.revertedWith(errPrefix + ": transfer to non contract address");
       });
 
       it("will fail when receivers do not return proper sig", async function () {
@@ -173,7 +173,7 @@ function shouldBehaveLikeERC1363TransferAndCall(
             amount
           );
         await expect(tx).to.be.revertedWith(
-          errPrefix + ": _checkAndCallTransfer reverts"
+          errPrefix + ": transfer to non contract address"
         );
       });
 
