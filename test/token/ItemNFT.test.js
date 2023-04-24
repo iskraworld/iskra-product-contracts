@@ -5,7 +5,7 @@ const { AddressZero } = ethers.constants;
 const {
   shouldNotSupportInterfaces,
   shouldSupportInterfaces,
-} = require("./ERC165/SupportInterface.behavior");
+} = require("./common/SupportInterface.behavior");
 
 const {
   shouldBehaveLikeERC721,
