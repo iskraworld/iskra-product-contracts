@@ -8,15 +8,16 @@ const {
   shouldBehaveLikeERC1363TransferAndCall,
 } = require("./ERC20/ERC1363.behavior");
 
-describe("GameToken contract", function () {
+describe("UtilityToken contract", function () {
   const initialSupply = 100000000;
   let owner, user1, user2;
 
   beforeEach(async function () {
     [owner, user1, user2] = await ethers.getSigners();
-    const GameToken = await ethers.getContractFactory("GameToken", owner);
-    this.token = await GameToken.deploy("Game Token", "GGT", initialSupply);
+    const CandyToken = await ethers.getContractFactory("UtilityToken", owner);
+    this.token = await CandyToken.deploy("Candy Token", "CND", owner.address);
     await this.token.deployed();
+    this.token.mint(owner.address, initialSupply);
   });
 
   describe("ERC20 behavior", function () {
@@ -86,6 +87,21 @@ describe("GameToken contract", function () {
     );
   });
 
+  describe("addMinter, removeMinter", function () {
+    it("basic", async function () {
+      await expect(
+        this.token.connect(user1).mint(user1.address, 1000000)
+      ).to.revertedWith("UtilityToken: caller is not a minter");
+      await this.token.addMinter(user1.address);
+      await expect(this.token.connect(user1).mint(user1.address, 1000000)).not
+        .to.reverted;
+      await this.token.removeMinter(user1.address);
+      await expect(
+        this.token.connect(user1).mint(user1.address, 1000000)
+      ).to.revertedWith("UtilityToken: caller is not a minter");
+    });
+  });
+
   describe("ERC1363TransferAndCall behavior", function () {
     const initialHolder = {};
     const spender = {};
@@ -101,7 +117,7 @@ describe("GameToken contract", function () {
     });
 
     shouldBehaveLikeERC1363TransferAndCall(
-      "GameToken",
+      "UtilityToken",
       initialHolder,
       spender,
       recipient

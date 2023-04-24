@@ -360,7 +360,7 @@ function shouldBehaveLikeERC1155([
                       from: proxy,
                     }
                   ),
-                  "ERC1155: caller is not token owner nor approved"
+                  "ERC1155: caller is not token owner or approved"
                 );
               });
             }
@@ -715,7 +715,7 @@ function shouldBehaveLikeERC1155([
                     "0x",
                     { from: proxy }
                   ),
-                  "ERC1155: caller is not token owner nor approved"
+                  "ERC1155: caller is not token owner or approved"
                 );
               });
             }

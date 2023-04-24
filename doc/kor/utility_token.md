@@ -1,12 +1,13 @@
-# ISKRA Game Token(ERC20) Contract
+# ISKRA Utility Token(ERC20) Contract
 
 ## 개요
-- `contracts/token/ERC20/GameToken.sol` 파일은 ERC20 표준을 따르는 샘플 토큰 구현체로서, 이름(name), 심볼(symbol), 총 통화량(initial supply)을 배포 때 정할 수 있도록 구현된 토큰입니다.
-- 배포시 초기 발행량이 정해지면, 추가 mint나 burn 기능이 불가능한 고정 통화량 토큰입니다.
+- `contracts/token/ERC20/UtilityToken.sol` 파일은 ERC20 표준을 따르는 샘플 토큰 구현체로서, 이름(name), 심볼(symbol), 최초 minter를 배포 때 정할 수 있도록 구현된 토큰입니다.
+- 배포시 초기 발행량은 0이며, minter 권한이 있는 account로 mint나 burn을 할 수 있습니다.
+- minter는 무제한 발행이 가능합니다.
+- owner는 minter를 추가/삭제할 수 있습니다.
 - decimal은 18로 고정입니다.
-- 초기 배포되면 owner가 총 통화량을 모두 소유하게 됩니다.
 - IERC20, IERC20Metadata, IERC165 표준 인터페이스를 따릅니다.
-- `iskra-product-cmd`에서는 ERC20 토큰의 `배포`, `approve`, `transfer` 기능을 수행할 수 있습니다.
+- `iskra-product-cmd`에서는 ERC20 토큰의 `배포`, `mint`, `addMinter`, `removeMinter`, `approve`, `transfer` 기능을 수행할 수 있습니다.
 
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
@@ -39,40 +40,40 @@ ex)
 npx hardhat wallet:add --name deployer --password 1234
 wallet [deployer] is added
 
-npx hardhat gametoken:deploy --name "GameMeso" --symbol GMM --supply 1000000000 --signer deployer --password 1234
+npx hardhat utilitytoken:deploy --name "Candy" --symbol CND --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5 --signer deployer --password 1234
 ```
 - 보다 자세한 wallet 이용법은 [Wallet](wallet.md)를 참조하세요.
 
 ## 네트워크 선택
 - 모든 커맨드에 네트워크 옵션(`--network`)을 줄 수 있습니다. 네트워크 옵션을 주지 않으면 hardhat node(local)에서 수행됩니다.
 - 네트워크 설정은 `harhat.config.js`에 있습니다. 기본적으로 다음 네트워크를 지원합니다. 필요시 네트워크 정보를 추가하시기 바랍니다.
-  - `baobab`: Klaytn testnet
-  - `cypress`: Klaytn mainnet
-  - `goerli`: Ethereum testnet
-  - `ethereum`: Ethereum mainnet
+    - `baobab`: Klaytn testnet
+    - `cypress`: Klaytn mainnet
+    - `goerli`: Ethereum testnet
+    - `ethereum`: Ethereum mainnet
 - 예로 Baobab에서 수행하려면 아래처럼 옵션을 주면 됩니다.
 
 ```
-npx hardhat gametoken:deploy --network baobab --name "GameMeso" --symbol GMM --supply 1000000000
+npx hardhat utilitytoken:deploy --network baobab --name "Candy" --symbol CND --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
 ```
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
 ## 배포
 
-다음 명령어로 Game token 컨트랙트를 배포할 수 있습니다.
+다음 명령어로 Utility token 컨트랙트를 배포할 수 있습니다.
 
 ```
-npx hardhat gametoken:deploy [--signer [signer name] --password [password]] --name [name] --symbol [symbol] --supply [supply; 1 = 10^decimals]
+npx hardhat utilitytoken:deploy [--signer [signer name] --password [password]] --name [name] --symbol [symbol] --minter [first minter]
 
 ex)
-npx hardhat gametoken:deploy --network baobab --name "GameMeso" --symbol GMM --supply 1000000000
+npx hardhat utilitytoken:deploy --network baobab --signer deployer --password 1234 --name "CandyToken" --symbol CND --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
 ============Args================
 {
-  name: 'GameMeso',
-  symbol: 'GMM',
-  supply: '1000000000',
-  signer: undefined,
-  password: undefined
+  signer: 'shared',
+  password: '1234',
+  name: 'CandyToken',
+  symbol: 'CND',
+  minter: '0x4fca6cad9b7d521fb8adc225a635565350858ab6'
 }
 ================================
 ============TxResult============
@@ -80,49 +81,74 @@ Tx Success
 [
   {
     transactionIndex: 1,
-    blockNumber: 102257853,
-    transactionHash: '0x02d51ad0d94fe33fc272ea4f18170ada3858ca01c42706c46dd9f7d169b52be2',
-    address: '0xCf723d52d2b121d829209109903F7BF823F3a5C8',
+    blockNumber: 120466331,
+    transactionHash: '0xce579f97e86c21dd1dbe12ad7c4a7abb59797fe356c9c916ad0364c631b53622',
+    address: '0xEA7Fc23602b34D94337d77aF824DbD3e722B6975',
     topics: [
       '0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0',
       '0x0000000000000000000000000000000000000000000000000000000000000000',
-      '0x000000000000000000000000c4417f73dac656337cecfee8c784130f08be4fa7'
+      '0x0000000000000000000000004fca6cad9b7d521fb8adc225a635565350858ab6'
     ],
     data: '0x',
-    logIndex: 1,
-    blockHash: '0x87990ec6bd533c93b2d6ae740596d44aa3db2198ab462eb83576415accaf7a2a'
+    logIndex: 0,
+    blockHash: '0x25fb2cd885353248474237796b558cc0e9e7e203c28a0086f1d9005880490975'
   },
   {
     transactionIndex: 1,
-    blockNumber: 102257853,
-    transactionHash: '0x02d51ad0d94fe33fc272ea4f18170ada3858ca01c42706c46dd9f7d169b52be2',
-    address: '0xCf723d52d2b121d829209109903F7BF823F3a5C8',
+    blockNumber: 120466331,
+    transactionHash: '0xce579f97e86c21dd1dbe12ad7c4a7abb59797fe356c9c916ad0364c631b53622',
+    address: '0xEA7Fc23602b34D94337d77aF824DbD3e722B6975',
     topics: [
-      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
-      '0x0000000000000000000000000000000000000000000000000000000000000000',
-      '0x000000000000000000000000c4417f73dac656337cecfee8c784130f08be4fa7'
+      '0x6ae172837ea30b801fbfcdd4108aa1d5bf8ff775444fd70256b44e6bf3dfc3f6',
+      '0x0000000000000000000000004fca6cad9b7d521fb8adc225a635565350858ab6'
     ],
-    data: '0x0000000000000000000000000000000000000000033b2e3c9fd0803ce8000000',
-    logIndex: 2,
-    blockHash: '0x87990ec6bd533c93b2d6ae740596d44aa3db2198ab462eb83576415accaf7a2a'
+    data: '0x',
+    logIndex: 1,
+    blockHash: '0x25fb2cd885353248474237796b558cc0e9e7e203c28a0086f1d9005880490975'
   }
 ]
 ================================
- Game token GameMeso was deployed to: 0xCf723d52d2b121d829209109903F7BF823F3a5C8
+ UtilityToken CandyToken was deployed to: 0xEA7Fc23602b34D94337d77aF824DbD3e722B6975
 ```
 
 - `--network` 옵션으로 체인을 선택할 수 있습니다.
-- `--supply` 옵션으로 총 통화량을 설정할 수 있습니다. 단위는 1이 10^18개 입니다. 위 예처럼 `1000000000`를 입력하면 10억개를 초기 발행합니다.
-- 성공적으로 배포되면 위 처럼 배포된 컨트랙트 주소가 표시됩니다. 예에서는 `0x32DC9b60F80ac37Af2c8D9837ab90De3E6d23D1B`
-- 또한 `~/.iskra-console/deployed/gametoken-address.json`에 주소가 남겨집니다.
+- 성공적으로 배포되면 위 처럼 배포된 컨트랙트 주소가 표시됩니다. 예에서는 `0xEA7Fc23602b34D94337d77aF824DbD3e722B6975`
+- 또한 `~/.iskra-console/deployed/utilitytoken-address.json`에 주소가 남겨집니다.
+
+## mint
+- 스크립트로 ERC20 토큰을 mint할 수 있습니다. 단 minter로 등록된 account만 가능합니다.
+```
+npx hardhat utilitytoken:mint [--signer [signer] --password [password]] --to [recipient] --amount [amount]
+
+ex)
+npx hardhat --network baobab utilitytoken:mint --signer minter --password 1234 --to 0x1ABC7154748D1CE5144478CDEB574AE244B939B5 --amount 10000 --token 0xEA7Fc23602b34D94337d77aF824DbD3e722B6975
+```
+
+## addMinter
+- 스크립트로 minter를 등록합니다.
+```
+npx hardhat utilitytoken:addminter [--signer [signer] --password [password]] --minter [new minter]
+
+ex)
+npx hardhat --network baobab utilitytoken:addminter --signer minter --password 1234 --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
+```
+
+## removeMinter
+- 스크립트로 minter를 제거합니다.
+```
+npx hardhat utilitytoken:removeminter [--signer [signer] --password [password]] --minter [minter]
+
+ex)
+npx hardhat --network baobab utilitytoken:removeminter --signer minter --password 1234 --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
+```
 
 ## approve
 - 스크립트로 ERC20의 approve 기능을 수행할 수 있습니다.
 ```
-npx hardhat gametoken:approve [--signer [signer] --password [password]] --spender [spender] --amount [amount]
+npx hardhat utilitytoken:approve [--signer [signer] --password [password]] --spender [spender] --amount [amount]
 
 ex)
-npx hardhat --network baobab gametoken:approve --spender 0xc4417F73DaC656337cEcfee8c784130f08be4FA7 --amount 1000
+npx hardhat --network baobab utilitytoken:approve --spender 0xc4417F73DaC656337cEcfee8c784130f08be4FA7 --amount 1000
 ============Args================
 {
   spender: '0xc4417F73DaC656337cEcfee8c784130f08be4FA7',
@@ -153,17 +179,17 @@ Tx Success
 ================================
 ```
 - `--network` 옵션으로 체인을 선택할 수 있습니다.
-- `--token` 옵션으로 `approve`할 토큰을 설정할 수 있습니다. 생략하면 `~/.iskra-console/deployed/gametoken-address.json`에 기록된 토큰을 `approve` 합니다.
+- `--token` 옵션으로 `approve`할 토큰을 설정할 수 있습니다. 생략하면 `~/.iskra-console/deployed/utilitytoken-address.json`에 기록된 토큰을 `approve` 합니다.
 - `--amount` 옵션의 단위는 1=10^18개 입니다.
 
 ## transfer
 - 스크립트로 ERC20의 transfer 기능을 수행할 수 있습니다.
 
 ```
-npx hardhat gametoken:transfer [--signer [signer] --password [password]] --recipient [recipient] --amount [amount]
+npx hardhat utilitytoken:transfer [--signer [signer] --password [password]] --recipient [recipient] --amount [amount]
 
 ex)
-npx hardhat --network baobab gametoken:transfer --recipient 0xc4417F73DaC656337cEcfee8c784130f08be4FA7 --amount 1000
+npx hardhat --network baobab utilitytoken:transfer --recipient 0xc4417F73DaC656337cEcfee8c784130f08be4FA7 --amount 1000
 ============Args================
 {
   recipient: '0xc4417F73DaC656337cEcfee8c784130f08be4FA7',
@@ -195,5 +221,5 @@ Tx Success
 
 ```
 - `--network` 옵션으로 체인을 선택할 수 있습니다.
-- `--token` 옵션으로 `transfer`할 토큰을 설정할 수 있습니다. 생략하면 `~/.iskra-console/deployed/gametoken-address.json`에 기록된 토큰을 `approve` 합니다.
+- `--token` 옵션으로 `transfer`할 토큰을 설정할 수 있습니다. 생략하면 `~/.iskra-console/deployed/utilitytoken-address.json`에 기록된 토큰을 `approve` 합니다.
 - `--amount` 옵션의 단위는 1=10^18개 입니다.

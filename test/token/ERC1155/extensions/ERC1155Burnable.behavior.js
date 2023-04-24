@@ -46,7 +46,7 @@ function shouldBehaveLikeERC1155Burnable(
         this.token.burn(holder, tokenIds[0], amounts[0].subn(1), {
           from: other,
         }),
-        "ERC1155: caller is not token owner nor approved"
+        "ERC1155: caller is not token owner or approved"
       );
     });
   });
@@ -93,7 +93,7 @@ function shouldBehaveLikeERC1155Burnable(
           [amounts[0].subn(1), amounts[1].subn(2)],
           { from: other }
         ),
-        "ERC1155: caller is not token owner nor approved"
+        "ERC1155: caller is not token owner or approved"
       );
     });
   });
