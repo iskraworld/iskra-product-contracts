@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable2Step.sol";
 // ItemNFT features
 //  - ERC721 basic functions
 contract ItemNFT is ERC721, Ownable2Step {
-    string internal baseURI = "";
+    string internal _mBaseURI = "";
 
     constructor(
         string memory name_,
@@ -25,10 +25,10 @@ contract ItemNFT is ERC721, Ownable2Step {
     }
 
     function _baseURI() internal view override returns (string memory) {
-        return baseURI;
+        return _mBaseURI;
     }
 
     function setBaseURI(string memory _uri) public onlyOwner {
-        baseURI = _uri;
+        _mBaseURI = _uri;
     }
 }

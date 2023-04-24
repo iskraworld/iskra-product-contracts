@@ -28,10 +28,10 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
     event MinterRemoved(address indexed minter);
 
     constructor(
-        string memory _name,
-        string memory _symbol,
+        string memory name_,
+        string memory symbol_,
         address firstMinter
-    ) ERC20(_name, _symbol) {
+    ) ERC20(name_, symbol_) {
         addMinter(firstMinter);
     }
 

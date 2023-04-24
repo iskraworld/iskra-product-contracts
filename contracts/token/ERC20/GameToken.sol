@@ -23,11 +23,11 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
     using Address for address;
 
     constructor(
-        string memory _name,
-        string memory _symbol,
-        uint256 _initialSupply
-    ) ERC20(_name, _symbol) {
-        _mint(msg.sender, _initialSupply);
+        string memory name_,
+        string memory symbol_,
+        uint256 initialSupply
+    ) ERC20(name_, symbol_) {
+        _mint(msg.sender, initialSupply);
     }
 
     function supportsInterface(bytes4 interfaceId)
