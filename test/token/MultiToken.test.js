@@ -136,7 +136,7 @@ describe("MultiToken", function () {
       await expect(
         burnableToken.setApprovalBurnPermission(firstHolder.address, true)
       )
-        .to.emit(burnableToken, "ApprovalBurnPermission")
+        .to.emit(burnableToken, "BurnPermissionApproval")
         .withArgs(firstHolder.address, true);
 
       await burnableToken

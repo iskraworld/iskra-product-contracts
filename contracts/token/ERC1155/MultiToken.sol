@@ -24,7 +24,7 @@ contract MultiToken is
     bool public immutable pausable;
     bool public immutable burnable;
 
-    event ApprovalBurnPermission(
+    event BurnPermissionApproval(
         address indexed newBurner,
         bool indexed approved
     );
@@ -96,7 +96,7 @@ contract MultiToken is
         whenNotPaused
     {
         burnApprovals[burner] = approved;
-        emit ApprovalBurnPermission(burner, approved);
+        emit BurnPermissionApproval(burner, approved);
     }
 
     function mint(
