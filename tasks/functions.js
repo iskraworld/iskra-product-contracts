@@ -19,8 +19,8 @@ const utilityTokenAddressJson = path.join(
   "utilitytoken-address.json"
 );
 const itemNFTAddressJson = path.join(
-    deployedContractDir,
-    "itemnft-address.json"
+  deployedContractDir,
+  "itemnft-address.json"
 );
 const vestingImplAddressJson = path.join(
   deployedContractDir,
@@ -198,8 +198,8 @@ function saveItemNFTAddress(token) {
   checkDeployDir(fs);
 
   fs.writeFileSync(
-      itemNFTAddressJson,
-      JSON.stringify({ ItemNFTAddress: token.address }, undefined, 2)
+    itemNFTAddressJson,
+    JSON.stringify({ ItemNFTAddress: token.address }, undefined, 2)
   );
 }
 

@@ -7,7 +7,12 @@ import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 contract ERC721Receiver is IERC721Receiver {
     bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 
-    event OnReceived(address operator, address from, uint256 tokenId, bytes data);
+    event OnReceived(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes data
+    );
 
     function onERC721Received(
         address operator,
@@ -21,7 +26,12 @@ contract ERC721Receiver is IERC721Receiver {
 }
 
 contract ERC721ReceiverInvalidReturn is IERC721Receiver {
-    event OnReceived(address operator, address from, uint256 tokenId, bytes data);
+    event OnReceived(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes data
+    );
 
     function onERC721Received(
         address operator,
@@ -37,7 +47,12 @@ contract ERC721ReceiverInvalidReturn is IERC721Receiver {
 contract ERC721ReceiverMissingParam {
     bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 
-    event OnReceived(address operator, address from, uint256 tokenId, bytes data);
+    event OnReceived(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes data
+    );
 
     function onERC721Received(
         address operator,

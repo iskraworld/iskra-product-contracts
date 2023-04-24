@@ -18,7 +18,10 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
     mapping(address => bool) public burnApprovals;
     string public baseURI;
 
-    event BurnPermissionApproval(address indexed newBurner, bool indexed approved);
+    event BurnPermissionApproval(
+        address indexed newBurner,
+        bool indexed approved
+    );
 
     constructor(
         string memory name_,
@@ -47,30 +50,53 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
         _mint(to, tokenId);
     }
 
-    function mintBatch(address to, uint256[] calldata tokenIds) public onlyOwner {
+    function mintBatch(address to, uint256[] calldata tokenIds)
+        public
+        onlyOwner
+    {
         for (uint256 i = 0; i < tokenIds.length; i++) {
             _mint(to, tokenIds[i]);
         }
     }
 
-    function burn(uint256 tokenId) public override whenBurnableEnabled hasBurnPermission {
+    function burn(uint256 tokenId)
+        public
+        override
+        whenBurnableEnabled
+        hasBurnPermission
+    {
         super.burn(tokenId);
     }
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721, ERC721URIStorage)
+    {
         super._burn(tokenId);
     }
 
-    function setBurnPermissionApproval(address burner, bool approved) external onlyOwner whenBurnableEnabled {
+    function setBurnPermissionApproval(address burner, bool approved)
+        external
+        onlyOwner
+        whenBurnableEnabled
+    {
         burnApprovals[burner] = approved;
         emit BurnPermissionApproval(burner, approved);
     }
 
-    function setTokenURI(uint256 tokenId, string memory _tokenURI) public onlyOwner {
+    function setTokenURI(uint256 tokenId, string memory _tokenURI)
+        public
+        onlyOwner
+    {
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
         return super.tokenURI(tokenId);
     }
 
@@ -88,6 +114,9 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
         uint256,
         uint256
     ) internal view override {
-        require(to != address(this), "ItemNFT: cannot transfer tokens to the token contract itself");
+        require(
+            to != address(this),
+            "ItemNFT: cannot transfer tokens to the token contract itself"
+        );
     }
 }

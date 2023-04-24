@@ -30,7 +30,11 @@ const INTERFACES = {
     "safeTransferFrom(address,address,uint256)",
     "safeTransferFrom(address,address,uint256,bytes)",
   ],
-  ERC721Enumerable: ["totalSupply()", "tokenOfOwnerByIndex(address,uint256)", "tokenByIndex(uint256)"],
+  ERC721Enumerable: [
+    "totalSupply()",
+    "tokenOfOwnerByIndex(address,uint256)",
+    "tokenByIndex(uint256)",
+  ],
   ERC721Metadata: ["name()", "symbol()", "tokenURI(uint256)"],
   AccessControl: [
     "getRoleAdmin(bytes32)",
@@ -62,7 +66,9 @@ function shouldSupportInterfaces(interfaces = []) {
       const interfaceId = INTERFACE_IDS[k];
 
       it(`should be supported ${k}`, async function () {
-        expect(await contractUnderTest.supportsInterface(interfaceId)).to.equal(true);
+        expect(await contractUnderTest.supportsInterface(interfaceId)).to.equal(
+          true
+        );
       });
     }
   });
@@ -79,7 +85,9 @@ function shouldNotSupportInterfaces(interfaces = []) {
       const interfaceId = INTERFACE_IDS[k];
 
       it(`should not be supported ${k}`, async function () {
-        expect(await contractUnderTest.supportsInterface(interfaceId)).to.equal(false);
+        expect(await contractUnderTest.supportsInterface(interfaceId)).to.equal(
+          false
+        );
       });
     }
   });
