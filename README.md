@@ -81,6 +81,13 @@ npx hardhat utilitytoken:deploy --name Candy --symbol CND --minter 0x1ABC7154748
 ```
 For more information, please refer [GameToken](doc/kor/utility_token.md)
 
+### itemnft
+```
+npx hardhat itemnft:deploy
+...
+```
+For more information, please refer [ItemNFT](doc/kor/item_nft.md)
+
 ### vesting
 ```
 // At first, you should deploy the vesting implementation contract, and then deploy serveral vesting proxy contracts for beneficiaries

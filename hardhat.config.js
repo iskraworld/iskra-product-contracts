@@ -5,6 +5,7 @@ require('hardhat-abi-exporter');
 require("./tasks/transaction.query");
 require("./tasks/wallet");
 require("./tasks/MultiToken.tx");
+require("./tasks/ItemToken.tx");
 require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
@@ -45,7 +46,7 @@ module.exports = {
     base: {
       url: "https://iec2-user@ec2-52-91-69-221.compute-1.amazonaws.com:8545",
       networkId: 84531,
-      accounts: { 
+      accounts: {
         mnemonic: "crater kiwi depth alley myth flag bleak swing fragile abandon pupil twist"
       }
     },
