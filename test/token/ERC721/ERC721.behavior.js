@@ -17,8 +17,8 @@ function shouldBehaveLikeERC721() {
     beforeEach(async function () {
       [owner, newOwner, approved, anotherApproved, operator, other] =
         this.signers;
-      await this.token.connect(owner).mint(owner.address, firstTokenId);
-      await this.token.connect(owner).mint(owner.address, secondTokenId);
+      await this.token.connect(owner).safeMint(owner.address, firstTokenId);
+      await this.token.connect(owner).safeMint(owner.address, secondTokenId);
       this.toWhom = other; // default to other for toWhom in context-dependent tests
     });
 
@@ -912,7 +912,7 @@ function shouldBehaveLikeERC721Metadata(name, symbol, uri) {
       let owner;
       beforeEach(async function () {
         owner = this.signers[0];
-        await this.token.mint(owner.address, firstTokenId);
+        await this.token.safeMint(owner.address, firstTokenId);
       });
 
       it("return proper token uri", async function () {

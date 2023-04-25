@@ -5,6 +5,7 @@ const { constants, expectRevert } = require("@openzeppelin/test-helpers");
 const { ZERO_ADDRESS } = constants;
 
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 function shouldBehaveLikeERC1155([
   minter,
