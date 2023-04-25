@@ -109,7 +109,11 @@ contract MultiToken is
         emit BurnApproval(burner, approved);
     }
 
-    function setMintApproval(address minter, bool approved) external onlyOwner {
+    function setMintApproval(address minter, bool approved)
+        external
+        onlyOwner
+        whenNotPaused
+    {
         mintApprovals[minter] = approved;
         emit MintApproval(minter, approved);
     }
