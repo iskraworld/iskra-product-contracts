@@ -90,12 +90,27 @@ task("itemnft:mint-batch", "mint tokens")
   )
   .addOptionalParam("password", "password for decrypting wallet")
   .addParam("to", "The target address receiving minted token")
-  .addParam("ids", "Comma seperated token ids")
+  .addOptionalParam("ids", "Comma seperated token ids")
+  .addOptionalParam("range", "start-end formatted range")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
+
+    let ids;
+    if (taskArgs.ids) {
+      if (taskArgs.range) {
+        console.error("cannot specify both of ids and range");
+      }
+      ids = taskArgs.ids.split(",");
+    } else if (taskArgs.range) {
+      const range = taskArgs.range.split("-");
+      ids = [];
+      for (let i = BigInt(range[0]); i <= BigInt(range[1]); i++) {
+        ids.push(i);
+      }
+    }
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
-    const tx = await token.mintBatch(taskArgs.to, taskArgs.ids.split(","));
+    const tx = await token.mintBatch(taskArgs.to, ids);
     printTxResult(await tx.wait());
   });
 

@@ -60,7 +60,7 @@ npx hardhat itemnft:deploy --network baobab
 
 ## 배포
 - npx hardhat itemnft:deploy [--signer [signer] --password [password]] --name [name] --symbol [symbol] [--uri [uri]] [--burnable] --network [network]
-  - `npx hardhat itemnft:deploy --name "Item Token" --symbol "IT" --burnable --network baobab`
+  - `npx hardhat itemnft:deploy --name "Item  NFT" --symbol "IN" --burnable --network baobab`
   - name. symbol은 필수 입니다.
   - uri, burnable은 optional 입니다.
   - Iskra Item NFT을 name, symbol, uri, burnable여부와 함께 deploy 합니다.
@@ -70,8 +70,12 @@ npx hardhat itemnft:deploy --network baobab
 ## mint
 - npx hardhat itemnft:mint --signer [signer] --password [password] --id [id] --to [to] --amount [amount] --network [network]
   - `npx hardhat itemnft:mint --to f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --id 0 --network baobab`
-- npx hardhat itemnft:mint-batch --signer [signer] --password [password] --ids [id](,id, …) --to [to] --network [network]
-  - `npx hardhat itemnft:mint-batch --to f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --ids 1,2,3 --network baobab`
+- comma separated ids로 tokenID를 지정한다
+  - npx hardhat itemnft:mint-batch --signer [signer] --password [password] --ids [id](,id, …) --to [to] --network [network]
+    - `npx hardhat itemnft:mint-batch --to f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --ids 1,2,3 --network baobab`
+- range로 tokenID를 지정한다
+  - npx hardhat itemnft:mint-batch --signer [signer] --password [password] --range [start]-[end] --to [to] --network [network]
+    - `npx hardhat itemnft:mint-batch --to f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --range 1-100 --network baobab`
 
 ## burn
 - BURN 권한이 있는 signer가 소유한 토큰만 burn 할 수 있습니다. 
