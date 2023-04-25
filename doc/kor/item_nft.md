@@ -1,7 +1,7 @@
 # ISKRA Item NFT(ERC721) Contract
 
 ## 개요
-- `contracts/token/ERC721/ItemNFT.sol` 파일은 ERC721 표준을 따르는 샘플 멀티 토큰 구현체로서, mint/burn 기능을 갖춘 멀티 토큰입니다.
+- `contracts/token/ERC721/ItemNFT.sol` 파일은 ERC721 표준을 따르는 샘플 대체불가 토큰 구현체로서, mint/burn 기능을 갖춘 대체불가 토큰입니다.
 - 컨트랙트 배포 시에만 burn 가능 여부를 설정할 수 있으며 배포 후에는 변경할 수 없습니다.
 
 ## 권한
