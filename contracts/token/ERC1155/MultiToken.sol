@@ -24,15 +24,17 @@ contract MultiToken is
     bool public immutable pausable;
     bool public immutable burnable;
 
-    event BurnPermissionApproval(
-        address indexed newBurner,
-        bool indexed approved
-    );
     mapping(address => bool) public burnApprovals;
+    mapping(address => bool) public mintApprovals;
+
     // NOTE:
     // Having a single name is not appropriate for the original ERC1155.
     // However, we added it because most network explorers refer to this field to expose token information.
     string public name;
+
+    event BurnApproval(address indexed burner, bool indexed approved);
+
+    event MintApproval(address indexed minter, bool indexed approved);
 
     constructor(
         string memory uri_,
@@ -75,8 +77,16 @@ contract MultiToken is
 
     modifier hasBurnPermission() {
         require(
-            msg.sender == owner() || burnApprovals[msg.sender],
-            "MultiToken: msg.sender does not have permission to burn"
+            _msgSender() == owner() || burnApprovals[_msgSender()],
+            "MultiToken: the sender does not have permission to burn"
+        );
+        _;
+    }
+
+    modifier hasMintPermission() {
+        require(
+            _msgSender() == owner() || mintApprovals[_msgSender()],
+            "MultiToken: the sender does not have permission to mint"
         );
         _;
     }
@@ -89,14 +99,23 @@ contract MultiToken is
         _unpause();
     }
 
-    function setApprovalBurnPermission(address burner, bool approved)
+    function setBurnApproval(address burner, bool approved)
         external
         onlyOwner
         whenBurnableEnabled
         whenNotPaused
     {
         burnApprovals[burner] = approved;
-        emit BurnPermissionApproval(burner, approved);
+        emit BurnApproval(burner, approved);
+    }
+
+    function setMintApproval(address minter, bool approved)
+        external
+        onlyOwner
+        whenNotPaused
+    {
+        mintApprovals[minter] = approved;
+        emit MintApproval(minter, approved);
     }
 
     function mint(
@@ -104,7 +123,7 @@ contract MultiToken is
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public onlyOwner {
+    ) public hasMintPermission {
         _mint(account, id, amount, data);
     }
 
@@ -113,7 +132,7 @@ contract MultiToken is
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public onlyOwner {
+    ) public hasMintPermission {
         _mintBatch(to, ids, amounts, data);
     }
 

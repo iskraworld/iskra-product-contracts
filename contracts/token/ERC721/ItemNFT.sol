@@ -16,12 +16,12 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
     bool public immutable burnable;
     mapping(address => bool) public burnApprovals;
+    mapping(address => bool) public mintApprovals;
     string public baseURI;
 
-    event BurnPermissionApproval(
-        address indexed newBurner,
-        bool indexed approved
-    );
+    event BurnApproval(address indexed burner, bool indexed approved);
+
+    event MintApproval(address indexed minter, bool indexed approved);
 
     constructor(
         string memory name_,
@@ -40,22 +40,30 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
 
     modifier hasBurnPermission() {
         require(
-            _msgSender() == owner() || burnApprovals[msg.sender],
+            _msgSender() == owner() || burnApprovals[_msgSender()],
             "ItemNFT: the sender does not have permission to burn"
         );
         _;
     }
 
-    function mint(address to, uint256 tokenId) public onlyOwner {
-        _mint(to, tokenId);
+    modifier hasMintPermission() {
+        require(
+            _msgSender() == owner() || mintApprovals[_msgSender()],
+            "ItemNFT: the sender does not have permission to mint"
+        );
+        _;
     }
 
-    function mintBatch(address to, uint256[] calldata tokenIds)
+    function safeMint(address to, uint256 tokenId) public hasMintPermission {
+        _safeMint(to, tokenId);
+    }
+
+    function safeMintBatch(address to, uint256[] calldata tokenIds)
         public
-        onlyOwner
+        hasMintPermission
     {
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            _mint(to, tokenIds[i]);
+            _safeMint(to, tokenIds[i]);
         }
     }
 
@@ -75,13 +83,18 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
         super._burn(tokenId);
     }
 
-    function setBurnPermissionApproval(address burner, bool approved)
+    function setBurnApproval(address burner, bool approved)
         external
         onlyOwner
         whenBurnableEnabled
     {
         burnApprovals[burner] = approved;
-        emit BurnPermissionApproval(burner, approved);
+        emit BurnApproval(burner, approved);
+    }
+
+    function setMintApproval(address minter, bool approved) external onlyOwner {
+        mintApprovals[minter] = approved;
+        emit MintApproval(minter, approved);
     }
 
     function setTokenURI(uint256 tokenId, string memory _tokenURI)

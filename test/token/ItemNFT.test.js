@@ -46,7 +46,7 @@ describe("ItemNFT", function () {
 
     beforeEach(async function () {
       [owner, other] = this.signers;
-      expect(await this.contract.mint(other.address, firstTokenId)).emit(
+      expect(await this.contract.safeMint(other.address, firstTokenId)).emit(
         this.contract,
         "Transfer"
       );
@@ -77,21 +77,35 @@ describe("ItemNFT", function () {
     });
 
     it("mints a token properly if tx sender is the owner", async function () {
-      await expect(contract.connect(owner).mint(other.address, firstTokenId))
+      await expect(
+        contract.connect(owner).safeMint(other.address, firstTokenId)
+      )
+        .emit(contract, "Transfer")
+        .withArgs(AddressZero, other.address, firstTokenId);
+    });
+
+    it("mints a token properly if tx sender is the minter", async function () {
+      await expect(contract.setMintApproval(other.address, true))
+        .emit(contract, "MintApproval")
+        .withArgs(other.address, true);
+
+      await expect(
+        contract.connect(other).safeMint(other.address, firstTokenId)
+      )
         .emit(contract, "Transfer")
         .withArgs(AddressZero, other.address, firstTokenId);
     });
 
     it("reverts with a null destination address", async function () {
-      await expect(contract.mint(AddressZero, firstTokenId)).revertedWith(
+      await expect(contract.safeMint(AddressZero, firstTokenId)).revertedWith(
         "ERC721: mint to the zero address"
       );
     });
 
     it("reverts if tx sender is not the owner", async function () {
       await expect(
-        contract.connect(other).mint(other.address, firstTokenId)
-      ).revertedWith("Ownable: caller is not the owner");
+        contract.connect(other).safeMint(other.address, firstTokenId)
+      ).revertedWith("ItemNFT: the sender does not have permission to mint");
     });
   });
 
@@ -103,11 +117,15 @@ describe("ItemNFT", function () {
       [owner, other] = this.signers;
       contract = this.contract;
 
-      await expect(contract.connect(owner).mint(owner.address, firstTokenId))
+      await expect(
+        contract.connect(owner).safeMint(owner.address, firstTokenId)
+      )
         .emit(contract, "Transfer")
         .withArgs(AddressZero, owner.address, firstTokenId);
 
-      await expect(contract.connect(owner).mint(other.address, secondTokenId))
+      await expect(
+        contract.connect(owner).safeMint(other.address, secondTokenId)
+      )
         .emit(contract, "Transfer")
         .withArgs(AddressZero, other.address, secondTokenId);
     });
@@ -119,9 +137,8 @@ describe("ItemNFT", function () {
     });
 
     it("burns properly if tx sender has permission", async function () {
-      await expect(
-        contract.connect(owner).setBurnPermissionApproval(other.address, true)
-      ).not.reverted;
+      await expect(contract.connect(owner).setBurnApproval(other.address, true))
+        .not.reverted;
 
       await expect(contract.connect(other).burn(secondTokenId))
         .emit(contract, "Transfer")
@@ -149,7 +166,7 @@ describe("ItemNFT", function () {
     });
   });
 
-  describe("setBurnPermissionApproval", function () {
+  describe("setBurnApproval", function () {
     let contract;
     let owner, other;
 
@@ -157,22 +174,22 @@ describe("ItemNFT", function () {
       contract = this.contract;
       [owner, other] = this.signers;
 
-      expect(await contract.mint(other.address, firstTokenId)).emit(
+      expect(await contract.safeMint(other.address, firstTokenId)).emit(
         this.contract,
         "Transfer"
       );
     });
 
     it("approve properly if sender is owner", async function () {
-      await expect(contract.setBurnPermissionApproval(other.address, true))
-        .emit(contract, "BurnPermissionApproval")
+      await expect(contract.setBurnApproval(other.address, true))
+        .emit(contract, "BurnApproval")
         .withArgs(other.address, true);
       expect(await contract.burnApprovals(other.address)).to.be.equal(true);
     });
 
     it("reverts when the sender is not owner", async function () {
       await expect(
-        contract.connect(other).setBurnPermissionApproval(other.address, true)
+        contract.connect(other).setBurnApproval(other.address, true)
       ).revertedWith("Ownable: caller is not the owner");
     });
 
@@ -180,8 +197,31 @@ describe("ItemNFT", function () {
       contract = await ItemNFT.connect(owner).deploy(name, symbol, uri, false);
 
       await expect(
-        contract.connect(owner).setBurnPermissionApproval(other.address, true)
+        contract.connect(owner).setBurnApproval(other.address, true)
       ).revertedWith("ItemNFT: the token is not burnable");
+    });
+  });
+
+  describe("setMintApproval", function () {
+    let contract;
+    let owner, other;
+
+    beforeEach(async function () {
+      contract = this.contract;
+      [owner, other] = this.signers;
+    });
+
+    it("approve properly if sender is owner", async function () {
+      await expect(contract.setMintApproval(other.address, true))
+        .emit(contract, "MintApproval")
+        .withArgs(other.address, true);
+      expect(await contract.mintApprovals(other.address)).to.be.equal(true);
+    });
+
+    it("reverts when the sender is not owner", async function () {
+      await expect(
+        contract.connect(other).setMintApproval(other.address, true)
+      ).revertedWith("Ownable: caller is not the owner");
     });
   });
 });
