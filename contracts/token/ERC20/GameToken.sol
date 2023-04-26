@@ -27,7 +27,7 @@ contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
         string memory symbol_,
         uint256 initialSupply
     ) ERC20(name_, symbol_) {
-        _mint(msg.sender, initialSupply);
+        _mint(_msgSender(), initialSupply);
     }
 
     function supportsInterface(bytes4 interfaceId)

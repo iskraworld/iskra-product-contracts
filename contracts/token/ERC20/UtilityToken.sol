@@ -36,7 +36,7 @@ contract UtilityToken is IERC20Metadata, IERC1363, ERC20Burnable, Ownable2Step {
     }
 
     modifier onlyMinter() {
-        require(minters[msg.sender], "UtilityToken: caller is not a minter");
+        require(minters[_msgSender()], "UtilityToken: caller is not a minter");
         _;
     }
 
