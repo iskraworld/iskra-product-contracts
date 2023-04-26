@@ -99,6 +99,7 @@ task("itemnft:mint-batch", "mint tokens")
     if (taskArgs.ids) {
       if (taskArgs.range) {
         console.error("cannot specify both of ids and range");
+        return;
       }
       ids = taskArgs.ids.split(",");
     } else if (taskArgs.range) {
@@ -107,6 +108,9 @@ task("itemnft:mint-batch", "mint tokens")
       for (let i = BigInt(range[0]); i <= BigInt(range[1]); i++) {
         ids.push(i);
       }
+    } else {
+      console.error("Neither ids nor range are specified.");
+      return;
     }
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
