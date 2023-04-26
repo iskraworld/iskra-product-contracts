@@ -111,7 +111,7 @@ describe("MultiToken", function () {
         .connect(firstHolder)
         .burn(firstHolder.address, tokenId, tokenAmount);
       await expect(tx).to.be.revertedWith(
-        "MultiToken: msg.sender does not have permission to burn"
+        "MultiToken: the sender does not have permission to burn"
       );
     });
 
@@ -133,10 +133,8 @@ describe("MultiToken", function () {
         await burnableToken.balanceOf(firstHolder.address, tokenId)
       ).to.be.equal(1);
 
-      await expect(
-        burnableToken.setApprovalBurnPermission(firstHolder.address, true)
-      )
-        .to.emit(burnableToken, "BurnPermissionApproval")
+      await expect(burnableToken.setBurnApproval(firstHolder.address, true))
+        .to.emit(burnableToken, "BurnApproval")
         .withArgs(firstHolder.address, true);
 
       await burnableToken
