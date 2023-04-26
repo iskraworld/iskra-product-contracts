@@ -74,7 +74,7 @@ task("itemnft:mint", "mint a token")
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
-    const tx = await token.mint(taskArgs.to, taskArgs.id);
+    const tx = await token.safeMint(taskArgs.to, taskArgs.id);
     printTxResult(await tx.wait());
   });
 
@@ -114,7 +114,7 @@ task("itemnft:mint-batch", "mint tokens")
     }
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
-    const tx = await token.mintBatch(taskArgs.to, ids);
+    const tx = await token.safeMintBatch(taskArgs.to, ids);
     printTxResult(await tx.wait());
   });
 
