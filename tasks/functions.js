@@ -96,17 +96,17 @@ async function getUtilityToken(address, wallet) {
   return await ethers.getContractAt("UtilityToken", address, wallet);
 }
 
-async function getItemToken(address, wallet) {
+async function getItemNFT(address, wallet) {
   if (address.length === 0) {
     const fs = require("fs");
 
-    if (!fs.existsSync(itemTokenAddressJson)) {
+    if (!fs.existsSync(itemNFTAddressJson)) {
       console.error("You need to deploy your contract first");
       return;
     }
 
-    const addressJson = fs.readFileSync(itemTokenAddressJson);
-    address = JSON.parse(addressJson).ItemTokenAddress;
+    const addressJson = fs.readFileSync(itemNFTAddressJson);
+    address = JSON.parse(addressJson).ItemNFTAddress;
   }
 
   if ((await ethers.provider.getCode(address)) === "0x") {
@@ -114,7 +114,7 @@ async function getItemToken(address, wallet) {
     process.exit(1);
   }
 
-  return await ethers.getContractAt("ItemToken", address, wallet);
+  return await ethers.getContractAt("ItemNFT", address, wallet);
 }
 
 async function getDeployedVestingBeaconAddress() {
@@ -317,6 +317,7 @@ async function sendBaseCoinTo(to, amount) {
 }
 
 module.exports = {
+  getItemNFT,
   getMultiToken,
   getGameToken,
   getUtilityToken,

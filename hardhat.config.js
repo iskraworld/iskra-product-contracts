@@ -5,7 +5,7 @@ require('hardhat-abi-exporter');
 require("./tasks/transaction.query");
 require("./tasks/wallet");
 require("./tasks/MultiToken.tx");
-require("./tasks/ItemToken.tx");
+require("./tasks/ItemNFT.tx");
 require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
