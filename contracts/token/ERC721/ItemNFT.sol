@@ -7,13 +7,19 @@ pragma solidity ^0.8.2;
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 // ItemNFT features
 //  - ERC721 basic functions
 //  - configurable for burnable (defined at construction)
 //  - defense for transferring tokens to the token contract itself
-contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
+contract ItemNFT is
+    ERC721Enumerable,
+    ERC721URIStorage,
+    ERC721Burnable,
+    Ownable2Step
+{
     bool public immutable burnable;
     mapping(address => bool) public burnApprovals;
     mapping(address => bool) public mintApprovals;
@@ -31,6 +37,15 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
     ) ERC721(name_, symbol_) {
         setBaseURI(uri_);
         burnable = burnable_;
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 
     modifier whenBurnableEnabled() {
@@ -126,7 +141,7 @@ contract ItemNFT is ERC721URIStorage, ERC721Burnable, Ownable2Step {
         address to,
         uint256,
         uint256
-    ) internal view override {
+    ) internal view override(ERC721, ERC721Enumerable) {
         require(
             to != address(this),
             "ItemNFT: cannot transfer tokens to the token contract itself"
