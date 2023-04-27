@@ -137,14 +137,15 @@ contract ItemNFT is
     }
 
     function _beforeTokenTransfer(
-        address,
+        address from,
         address to,
-        uint256,
-        uint256
-    ) internal view override(ERC721, ERC721Enumerable) {
+        uint256 firstTokenId,
+        uint256 batchSize
+    ) internal override(ERC721, ERC721Enumerable) {
         require(
             to != address(this),
             "ItemNFT: cannot transfer tokens to the token contract itself"
         );
+        super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
     }
 }
