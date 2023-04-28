@@ -10,6 +10,7 @@ const {
 const {
   shouldBehaveLikeERC721,
   shouldBehaveLikeERC721Metadata,
+  shouldBehaveLikeERC721Enumerable,
 } = require("./ERC721/ERC721.behavior");
 
 describe("ItemNFT", function () {
@@ -38,6 +39,7 @@ describe("ItemNFT", function () {
   describe("ERC721", function () {
     shouldBehaveLikeERC721();
     shouldBehaveLikeERC721Metadata(name, symbol, uri);
+    shouldBehaveLikeERC721Enumerable();
   });
 
   describe("setBaseURI", function () {

@@ -786,8 +786,8 @@ function shouldBehaveLikeERC721Enumerable() {
       [owner, newOwner, approved, anotherApproved, operator, other] =
         this.signers;
 
-      await this.token.connect(owner).mintPrivate(owner.address);
-      await this.token.connect(owner).mintPrivate(owner.address);
+      await this.token.connect(owner).safeMint(owner.address, firstTokenId);
+      await this.token.connect(owner).safeMint(owner.address, secondTokenId);
       this.toWhom = other; // default to other for toWhom in context-dependent tests
     });
 
@@ -873,7 +873,7 @@ function shouldBehaveLikeERC721Enumerable() {
 
   describe("_mint(address, uint256)", function () {
     it("reverts with a null destination address", async function () {
-      await expect(this.token.mintPrivate(AddressZero)).revertedWith(
+      await expect(this.token.safeMint(AddressZero, firstTokenId)).revertedWith(
         "ERC721: mint to the zero address"
       );
     });
@@ -882,7 +882,7 @@ function shouldBehaveLikeERC721Enumerable() {
       let owner;
       beforeEach(async function () {
         owner = this.signers[0];
-        await this.token.mintPrivate(owner.address);
+        await this.token.safeMint(owner.address, firstTokenId);
       });
 
       it("adjusts owner tokens by index", async function () {
