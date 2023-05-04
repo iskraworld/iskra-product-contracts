@@ -70,7 +70,6 @@ contract Vesting is OwnableUpgradeable {
         );
         require(_duration > 0, "Vesting:  `_duration` is 0");
         // otherwise, claimer can claim all amount after first unlock period
-        require(_amount > 0, "Vesting: `_amount` is 0");
         require(
             _amount >= _initialUnlocked,
             "Vesting: `_initialUnlocked` is greater than `_amount`"
