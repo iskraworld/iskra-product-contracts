@@ -204,6 +204,11 @@ contract Vesting is OwnableUpgradeable {
         )
         onlyBeneficiary
     {
+        require(
+            _newBeneficiary != address(0),
+            "Vesting: _newBeneficiary is zero address"
+        );
+
         beneficiary = _newBeneficiary;
         emit SetBeneficiary(beneficiary);
     }
