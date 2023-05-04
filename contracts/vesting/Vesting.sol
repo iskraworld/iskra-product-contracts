@@ -90,11 +90,19 @@ contract Vesting is OwnableUpgradeable {
         uint256 _totalLocked = initialVestingAmount - initialUnlockedAmount;
         unlockUnit = _totalLocked / duration;
         remainder = _totalLocked - (unlockUnit * duration);
+
+        uint256 beforeBal = token.balanceOf(address(this));
         token.transferFrom(
             _distributor,
             address(this),
             initialVestingAmount * 10**18
         );
+        require(
+            token.balanceOf(address(this)) ==
+                beforeBal + initialVestingAmount * 10**18,
+            "Vesting: deflationary tokens are not allowed for vesting"
+        );
+
         status = VestingStatus.PREPARED;
 
         emit Prepared(
