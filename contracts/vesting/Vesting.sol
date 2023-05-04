@@ -141,6 +141,19 @@ contract Vesting is OwnableUpgradeable {
         checkStatus(status != VestingStatus.CREATED)
         onlyOwner
     {
+        require(
+            _reclaimer != address(0),
+            "Vesting: _reclaimer is zero address"
+        );
+        require(
+            _reclaimer != address(token),
+            "Vesting: _reclaimer address is same to the token address"
+        );
+        require(
+            _reclaimer != address(this),
+            "Vesting: _reclaimer address is same to this contract"
+        );
+
         uint256 _amount = token.balanceOf(address(this));
         if (_amount > 0) {
             token.transfer(_reclaimer, _amount);
