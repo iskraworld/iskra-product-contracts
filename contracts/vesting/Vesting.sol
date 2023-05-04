@@ -87,7 +87,10 @@ contract Vesting is OwnableUpgradeable {
         beneficiary = _beneficiary;
         initialVestingAmount = _amount;
         initialUnlockedAmount = _initialUnlocked;
-        uint256 _totalLocked = initialVestingAmount - initialUnlockedAmount;
+        uint256 _totalLocked;
+        unchecked {
+            _totalLocked = initialVestingAmount - initialUnlockedAmount;
+        }
         unlockUnit = _totalLocked / duration;
         remainder = _totalLocked - (unlockUnit * duration);
         token.transferFrom(
