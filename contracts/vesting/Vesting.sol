@@ -93,11 +93,12 @@ contract Vesting is OwnableUpgradeable {
         status = VestingStatus.PREPARED;
 
         uint256 beforeBal = token.balanceOf(address(this));
-        token.transferFrom(
+        bool ret = token.transferFrom(
             _distributor,
             address(this),
             initialVestingAmount * 10**18
         );
+        require(ret, "Vesting: transferring is failed");
         require(
             token.balanceOf(address(this)) ==
                 beforeBal + initialVestingAmount * 10**18,
@@ -164,7 +165,8 @@ contract Vesting is OwnableUpgradeable {
         status = VestingStatus.REVOKED;
         uint256 _amount = token.balanceOf(address(this));
         if (_amount > 0) {
-            token.transfer(_reclaimer, _amount);
+            bool ret = token.transfer(_reclaimer, _amount);
+            require(ret, "Vesting: transferring is failed");
         }
 
         emit Revoked(_reclaimer);
@@ -187,7 +189,8 @@ contract Vesting is OwnableUpgradeable {
         require(_amount <= _claimable, "Vesting: insufficient funds");
 
         claimedAmount = claimedAmount + _amount;
-        token.transfer(beneficiary, _amount * 10**18);
+        bool ret = token.transfer(beneficiary, _amount * 10**18);
+        require(ret, "Vesting: transferring is failed");
 
         emit Claimed(_amount);
     }
