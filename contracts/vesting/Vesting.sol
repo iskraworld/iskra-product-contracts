@@ -90,6 +90,7 @@ contract Vesting is OwnableUpgradeable {
         uint256 _totalLocked = initialVestingAmount - initialUnlockedAmount;
         unlockUnit = _totalLocked / duration;
         remainder = _totalLocked - (unlockUnit * duration);
+        status = VestingStatus.PREPARED;
 
         uint256 beforeBal = token.balanceOf(address(this));
         token.transferFrom(
@@ -102,8 +103,6 @@ contract Vesting is OwnableUpgradeable {
                 beforeBal + initialVestingAmount * 10**18,
             "Vesting: deflationary tokens are not allowed for vesting"
         );
-
-        status = VestingStatus.PREPARED;
 
         emit Prepared(
             _distributor,
@@ -162,11 +161,11 @@ contract Vesting is OwnableUpgradeable {
             "Vesting: _reclaimer address is same to this contract"
         );
 
+        status = VestingStatus.REVOKED;
         uint256 _amount = token.balanceOf(address(this));
         if (_amount > 0) {
             token.transfer(_reclaimer, _amount);
         }
-        status = VestingStatus.REVOKED;
 
         emit Revoked(_reclaimer);
     }
@@ -187,8 +186,8 @@ contract Vesting is OwnableUpgradeable {
         uint256 _claimable = getClaimableAmount();
         require(_amount <= _claimable, "Vesting: insufficient funds");
 
-        token.transfer(beneficiary, _amount * 10**18);
         claimedAmount = claimedAmount + _amount;
+        token.transfer(beneficiary, _amount * 10**18);
 
         emit Claimed(_amount);
     }
