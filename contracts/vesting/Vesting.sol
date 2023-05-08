@@ -44,6 +44,11 @@ contract Vesting is OwnableUpgradeable {
     uint256 public unlockUnit;
     VestingStatus public status;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize() public initializer {
         __Ownable_init();
     }
