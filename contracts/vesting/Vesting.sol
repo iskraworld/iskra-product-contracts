@@ -4,10 +4,13 @@
 
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 contract Vesting is OwnableUpgradeable {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
+
     event Prepared(
         address distributor,
         address beneficiary,
@@ -31,7 +34,7 @@ contract Vesting is OwnableUpgradeable {
 
     uint256 constant HOURS = 1 hours;
 
-    IERC20 public token;
+    IERC20Upgradeable public token;
     address public beneficiary;
     uint256 public start;
     uint256 public end;
@@ -85,7 +88,7 @@ contract Vesting is OwnableUpgradeable {
             "Vesting: _amount must be greater than _duration"
         );
 
-        token = IERC20(_token);
+        token = IERC20Upgradeable(_token);
         unlockPeriod = _unlockPeriodHours * HOURS;
         duration = _duration;
         beneficiary = _beneficiary;
@@ -97,12 +100,19 @@ contract Vesting is OwnableUpgradeable {
         }
         unlockUnit = _totalLocked / duration;
         remainder = _totalLocked - (unlockUnit * duration);
-        token.transferFrom(
+        status = VestingStatus.PREPARED;
+
+        uint256 beforeBal = token.balanceOf(address(this));
+        token.safeTransferFrom(
             _distributor,
             address(this),
             initialVestingAmount * 10**18
         );
-        status = VestingStatus.PREPARED;
+        require(
+            token.balanceOf(address(this)) ==
+                beforeBal + initialVestingAmount * 10**18,
+            "Vesting: deflationary tokens are not allowed for vesting"
+        );
 
         emit Prepared(
             _distributor,
@@ -148,11 +158,24 @@ contract Vesting is OwnableUpgradeable {
         checkStatus(status != VestingStatus.CREATED)
         onlyOwner
     {
+        require(
+            _reclaimer != address(0),
+            "Vesting: _reclaimer is zero address"
+        );
+        require(
+            _reclaimer != address(token),
+            "Vesting: _reclaimer address is same to the token address"
+        );
+        require(
+            _reclaimer != address(this),
+            "Vesting: _reclaimer address is same to this contract"
+        );
+
+        status = VestingStatus.REVOKED;
         uint256 _amount = token.balanceOf(address(this));
         if (_amount > 0) {
-            token.transfer(_reclaimer, _amount);
+            token.safeTransfer(_reclaimer, _amount);
         }
-        status = VestingStatus.REVOKED;
 
         emit Revoked(_reclaimer);
     }
@@ -173,8 +196,8 @@ contract Vesting is OwnableUpgradeable {
         uint256 _claimable = getClaimableAmount();
         require(_amount <= _claimable, "Vesting: insufficient funds");
 
-        token.transfer(beneficiary, _amount * 10**18);
         claimedAmount = claimedAmount + _amount;
+        token.safeTransfer(beneficiary, _amount * 10**18);
 
         emit Claimed(_amount);
     }
@@ -191,6 +214,11 @@ contract Vesting is OwnableUpgradeable {
         )
         onlyBeneficiary
     {
+        require(
+            _newBeneficiary != address(0),
+            "Vesting: _newBeneficiary is zero address"
+        );
+
         beneficiary = _newBeneficiary;
         emit SetBeneficiary(beneficiary);
     }
