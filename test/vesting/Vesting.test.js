@@ -217,7 +217,7 @@ describe("Vesting contract", function () {
           36,
           gameToken.address
         )
-      ).to.be.revertedWith("Vesting: `_amount` is 0");
+      ).to.be.revertedWith("Vesting: _amount must be greater than _duration");
     });
 
     it("invalid initialization; non-token address", async function () {

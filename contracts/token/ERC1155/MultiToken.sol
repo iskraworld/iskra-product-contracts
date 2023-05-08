@@ -57,11 +57,14 @@ contract MultiToken is
         return ERC1155URIStorage.uri(tokenId);
     }
 
-    function setURI(uint256 tokenId, string memory tokenURI_) public onlyOwner {
+    function setURI(uint256 tokenId, string calldata tokenURI_)
+        public
+        onlyOwner
+    {
         _setURI(tokenId, tokenURI_);
     }
 
-    function setBaseURI(string memory baseURI) public onlyOwner {
+    function setBaseURI(string calldata baseURI) public onlyOwner {
         _setBaseURI(baseURI);
     }
 
@@ -122,16 +125,16 @@ contract MultiToken is
         address account,
         uint256 id,
         uint256 amount,
-        bytes memory data
+        bytes calldata data
     ) public hasMintPermission {
         _mint(account, id, amount, data);
     }
 
     function mintBatch(
         address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
+        uint256[] calldata ids,
+        uint256[] calldata amounts,
+        bytes calldata data
     ) public hasMintPermission {
         _mintBatch(to, ids, amounts, data);
     }
@@ -146,8 +149,8 @@ contract MultiToken is
 
     function burnBatch(
         address account,
-        uint256[] memory ids,
-        uint256[] memory values
+        uint256[] calldata ids,
+        uint256[] calldata values
     ) public override whenBurnableEnabled hasBurnPermission {
         super.burnBatch(account, ids, values);
     }

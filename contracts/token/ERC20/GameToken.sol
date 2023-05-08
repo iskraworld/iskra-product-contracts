@@ -4,7 +4,6 @@
 
 pragma solidity ^0.8.2;
 
-import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -19,7 +18,7 @@ import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 //  - not mintable, not burnable
 //  - IERC1363Receiver feature
 //  - defense for transferring tokens to the token contract itself
-contract GameToken is IERC20Metadata, ERC20, IERC1363, Ownable2Step {
+contract GameToken is IERC20Metadata, ERC20, IERC1363 {
     using Address for address;
 
     constructor(

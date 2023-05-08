@@ -112,7 +112,7 @@ contract ItemNFT is
         emit MintApproval(minter, approved);
     }
 
-    function setTokenURI(uint256 tokenId, string memory _tokenURI)
+    function setTokenURI(uint256 tokenId, string calldata _tokenURI)
         public
         onlyOwner
     {
