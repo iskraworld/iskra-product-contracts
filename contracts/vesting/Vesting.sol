@@ -75,7 +75,6 @@ contract Vesting is OwnableUpgradeable {
         );
         require(_duration > 0, "Vesting:  `_duration` is 0");
         // otherwise, claimer can claim all amount after first unlock period
-        require(_amount > 0, "Vesting: `_amount` is 0");
         require(
             _amount >= _initialUnlocked,
             "Vesting: `_initialUnlocked` is greater than `_amount`"
@@ -92,7 +91,10 @@ contract Vesting is OwnableUpgradeable {
         beneficiary = _beneficiary;
         initialVestingAmount = _amount;
         initialUnlockedAmount = _initialUnlocked;
-        uint256 _totalLocked = initialVestingAmount - initialUnlockedAmount;
+        uint256 _totalLocked;
+        unchecked {
+            _totalLocked = initialVestingAmount - initialUnlockedAmount;
+        }
         unlockUnit = _totalLocked / duration;
         remainder = _totalLocked - (unlockUnit * duration);
         token.transferFrom(
