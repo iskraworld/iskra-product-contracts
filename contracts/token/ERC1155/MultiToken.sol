@@ -149,8 +149,8 @@ contract MultiToken is
 
     function burnBatch(
         address account,
-        uint256[] calldata ids,
-        uint256[] calldata values
+        uint256[] memory ids,
+        uint256[] memory values
     ) public override whenBurnableEnabled hasBurnPermission {
         super.burnBatch(account, ids, values);
     }
