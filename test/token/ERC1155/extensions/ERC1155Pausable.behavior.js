@@ -79,7 +79,9 @@ function shouldBehaveLikeERC1155Pausable(
           [firstTokenId],
           [firstTokenAmount],
           "0x",
-          { from: operator }
+          {
+            from: operator,
+          }
         ),
         "Pausable: paused"
       );
