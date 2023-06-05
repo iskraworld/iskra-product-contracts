@@ -1,0 +1,48 @@
+name: Deploy to Github Packages
+
+on:
+  workflow_run:
+    workflows: ["Test"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@iskraworld'
+      - name: Setup jq
+        uses: vegardit/gha-setup-jq@v1
+      - name: Determine Versions
+        id: versions
+        run: |
+          echo "REMOTE_VERSION=$(npm view @iskraworld/iskra-product-contracts version)" >> "$GITHUB_OUTPUT"
+          echo "LOCAL_VERSION=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+      - uses: jackbilestech/semver-compare@1.0.4
+        id: version-check
+        continue-on-error: true
+        with:
+          head: ${{ steps.versions.outputs.LOCAL_VERSION }}
+          base: ${{ steps.versions.outputs.REMOTE_VERSION }}
+          operator: '>'
+      - name: Publish
+        if: ${{ steps.version-check.outcome == 'success' }}
+        run: |
+          jq --slurp '.[0] * .[1] | del(.devDependencies, .scripts)' ../package.json publish.json > package.json
+          npm publish
+          git clean -fd
+          git tag "v${{ steps.versions.outputs.LOCAL_VERSION }}"
+          git push origin "v${{ steps.versions.outputs.LOCAL_VERSION }}"
+        working-directory: './contracts'
