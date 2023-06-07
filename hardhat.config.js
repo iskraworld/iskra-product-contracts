@@ -6,6 +6,7 @@ require("./tasks/transaction.query");
 require("./tasks/wallet");
 require("./tasks/MultiToken.tx");
 require("./tasks/ItemNFT.tx");
+require("./tasks/ItemNFTSnapshot.tx");
 require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
