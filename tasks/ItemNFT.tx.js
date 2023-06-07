@@ -5,12 +5,14 @@ const {
   saveItemNFTAddress,
   walletLoad,
 } = require("./functions");
+const config = require("hardhat/config");
 
 task("itemnft:deploy", "deploy Iskra ItemNFT contract")
   .addParam("name", "name")
   .addParam("symbol", "symbol")
   .addOptionalParam("uri", "baseuri", "")
   .addFlag("burnable", "burnable", false)
+  .addFlag("snapshot", "snapshot", false)
   .addOptionalParam(
     "signer",
     "The signer signs this transaction. wallet:add first"
@@ -19,13 +21,15 @@ task("itemnft:deploy", "deploy Iskra ItemNFT contract")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const Token = await ethers.getContractFactory("ItemNFT");
-    const token = await Token.connect(wallet).deploy(
-      taskArgs.name,
-      taskArgs.symbol,
-      taskArgs.uri,
-      taskArgs.burnable
-    );
+    let factory;
+    if (taskArgs.snapshot) {
+      factory = await ethers.getContractFactory("ItemNFTSnapshot");
+    } else {
+      factory = await ethers.getContractFactory("ItemNFT");
+    }
+    const token = await factory
+      .connect(wallet)
+      .deploy(taskArgs.name, taskArgs.symbol, taskArgs.uri, taskArgs.burnable);
     await token.deployed();
     printTxResult(await token.deployTransaction.wait());
     saveItemNFTAddress(token);
@@ -92,6 +96,7 @@ task("itemnft:mint-batch", "mint tokens")
   .addParam("to", "The target address receiving minted token")
   .addOptionalParam("ids", "Comma seperated token ids")
   .addOptionalParam("range", "start-end formatted range")
+  .addOptionalParam("batchSize", "num tokens in a TX", 300, config.types.int)
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
 
@@ -109,13 +114,27 @@ task("itemnft:mint-batch", "mint tokens")
         ids.push(i);
       }
     } else {
-      console.error("Neither ids nor range are specified.");
+      console.error("Neither ids nor range are specified");
       return;
     }
+    if (ids.length == 0) {
+      console.error("empty token ids");
+      return;
+    }
+
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
-    const tx = await token.safeMintBatch(taskArgs.to, ids);
-    printTxResult(await tx.wait());
+    let idx = 0;
+    do {
+      const idsSlice = ids.slice(idx, idx + taskArgs.batchSize);
+      console.log(
+        `- from: ${idsSlice[0]}, to: ${idsSlice[idsSlice.length - 1]}`
+      );
+      const tx = await token.safeMintBatch(taskArgs.to, idsSlice);
+      const receipt = await tx.wait();
+      console.log(`  tx: ${receipt.transactionHash}`);
+      idx += idsSlice.length;
+    } while (idx <= ids.length - 1);
   });
 
 task("itemnft:burn", "burn a token")
