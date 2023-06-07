@@ -139,7 +139,7 @@ async function getItemNFTSnapshot(address, wallet) {
     process.exit(1);
   }
 
-  return await ethers.getContractAt("ItemNFT", address, wallet);
+  return await ethers.getContractAt("ItemNFTSnapshot", address, wallet);
 }
 
 async function getDeployedVestingBeaconAddress() {
