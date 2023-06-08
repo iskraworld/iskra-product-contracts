@@ -1,13 +1,13 @@
 const {
-  getItemNFT,
+  getItemNFTSnapshot,
   printTxResult,
   printArguments,
-  saveItemNFTAddress,
+  saveItemNFTSnapshotAddress,
   walletLoad,
 } = require("./functions");
 const config = require("hardhat/config");
 
-task("itemnft:deploy", "deploy Iskra ItemNFT contract")
+task("itemnftsnapshot:deploy", "deploy Iskra ItemNFTSnapshot contract")
   .addParam("name", "name")
   .addParam("symbol", "symbol")
   .addOptionalParam("uri", "baseuri", "")
@@ -20,19 +20,16 @@ task("itemnft:deploy", "deploy Iskra ItemNFT contract")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const Token = await ethers.getContractFactory("ItemNFT");
-    const token = await Token.connect(wallet).deploy(
-      taskArgs.name,
-      taskArgs.symbol,
-      taskArgs.uri,
-      taskArgs.burnable
-    );
+    let factory = await ethers.getContractFactory("ItemNFTSnapshot");
+    const token = await factory
+      .connect(wallet)
+      .deploy(taskArgs.name, taskArgs.symbol, taskArgs.uri, taskArgs.burnable);
     await token.deployed();
     printTxResult(await token.deployTransaction.wait());
-    saveItemNFTAddress(token);
+    saveItemNFTSnapshotAddress(token);
   });
 
-task("itemnft:safetransferfrom", "transfer a token")
+task("itemnftsnapshot:safetransferfrom", "transfer a token")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -49,7 +46,7 @@ task("itemnft:safetransferfrom", "transfer a token")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.safeTransferFrom(
       taskArgs.from,
       taskArgs.to,
@@ -58,7 +55,7 @@ task("itemnft:safetransferfrom", "transfer a token")
     printTxResult(await tx.wait());
   });
 
-task("itemnft:mint", "mint a token")
+task("itemnftsnapshot:mint", "mint a token")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -74,12 +71,12 @@ task("itemnft:mint", "mint a token")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.safeMint(taskArgs.to, taskArgs.id);
     printTxResult(await tx.wait());
   });
 
-task("itemnft:mint-batch", "mint tokens")
+task("itemnftsnapshot:mint-batch", "mint tokens")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -120,7 +117,7 @@ task("itemnft:mint-batch", "mint tokens")
     }
 
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     let idx = 0;
     do {
       const idsSlice = ids.slice(idx, idx + taskArgs.batchSize);
@@ -134,7 +131,7 @@ task("itemnft:mint-batch", "mint tokens")
     } while (idx <= ids.length - 1);
   });
 
-task("itemnft:burn", "burn a token")
+task("itemnftsnapshot:burn", "burn a token")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -149,12 +146,12 @@ task("itemnft:burn", "burn a token")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.burn(taskArgs.id);
     printTxResult(await tx.wait());
   });
 
-task("itemnft:seturi", "set URI")
+task("itemnftsnapshot:seturi", "set URI")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -170,12 +167,12 @@ task("itemnft:seturi", "set URI")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.setTokenURI(taskArgs.id, taskArgs.uri);
     printTxResult(await tx.wait());
   });
 
-task("itemnft:setbaseuri", "set Base URI")
+task("itemnftsnapshot:setbaseuri", "set Base URI")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -190,12 +187,15 @@ task("itemnft:setbaseuri", "set Base URI")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.setBaseURI(taskArgs.uri);
     printTxResult(await tx.wait());
   });
 
-task("itemnft:setapprovalforall", "set approval for a account/operator pair")
+task(
+  "itemnftsnapshot:setapprovalforall",
+  "set approval for a account/operator pair"
+)
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -214,7 +214,7 @@ task("itemnft:setapprovalforall", "set approval for a account/operator pair")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.setApprovalForAll(
       taskArgs.operator,
       JSON.parse(taskArgs.approved)
@@ -222,7 +222,7 @@ task("itemnft:setapprovalforall", "set approval for a account/operator pair")
     printTxResult(await tx.wait());
   });
 
-task("itemnft:setburnpermission", "set burn permission to the account")
+task("itemnftsnapshot:setburnpermission", "set burn permission to the account")
   .addOptionalParam(
     "contract",
     "The address of deployed Iskra ItemNFT contract",
@@ -238,7 +238,7 @@ task("itemnft:setburnpermission", "set burn permission to the account")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getItemNFT(taskArgs.contract)).connect(wallet);
+    const token = (await getItemNFTSnapshot(taskArgs.contract)).connect(wallet);
     const tx = await token.setBurnPermissionApproval(
       taskArgs.account,
       JSON.parse(taskArgs.approved)
