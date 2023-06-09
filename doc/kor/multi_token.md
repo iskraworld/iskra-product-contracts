@@ -6,11 +6,10 @@
 - 다만, command 스크립트에서는 supply가 1인 토큰을 NFT로 간주하여 추가 mint가 불가능하도록 되어 있습니다.
 
 ## 권한
-- OWNER, URI_SETTER, MINTER, PAUSER 네 가지 역할(role)이 정의되어 있으며, 초기 배포자는 이 모든 권한을 유일하게 가집니다.
-- OWNER 권한은 URI_SETTER, MINTER, PAUSER를 정의할 수 있습니다.
-- URI_SETTER 권한은 토큰의 uri 정보를 바꿀 수 있습니다.
+- OWNER, MINTER, BURNER 세 가지 역할이 정의되어 있으며, 초기 배포자는 이 모든 권한을 유일하게 가집니다.
+- OWNER 권한은 MINTER, BURNER를 정의할 수 있습니다.
 - MINTER 권한은 토큰을 mint할 수 있습니다.
-- PAUSER 권한은 토큰을 pause할 수 있습니다.
+- BURNER 권한은 소유한 토큰을 burn할 수 있습니다.
 
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
@@ -98,3 +97,13 @@ npx hardhat multitoken:deploy --name example --network baobab
 ## approval
 - npx hardhat multitoken:setapprovalforall --signer [signer] --password [password] --operator [operator] --approved [true/false] --network [network]
   - `npx hardhat multitoken:setapprovalforall --operator 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
+
+## approval for mint permission
+- MINTER 권한을 부여하거나 취소합니다.
+- npx hardhat multitoken:setMintApproval --signer [signer] --password [password] --minter [minter] --approved [true/false] --network [network]
+  - `npx hardhat multitoken:setMintApproval --minter 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
+
+## approval for burn permission
+- BURNER 권한을 부여하거나 취소합니다.
+- npx hardhat multitoken:setBurnApproval --signer [signer] --password [password] --burner [burner] --approved [true/false] --network [network]
+  - `npx hardhat multitoken:setBurnApproval --burner 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`

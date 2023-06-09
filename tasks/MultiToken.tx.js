@@ -31,6 +31,48 @@ task("multitoken:deploy", "deploy Iskra MultiToken contract")
     saveMultiTokenAddress(token);
   });
 
+task("multitoken:setMintApproval", "control mint permission")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("minter", "address to control the mint permission")
+  .addParam("approved", "true/false: approve or not")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setMintApproval(taskArgs.minter, taskArgs.approved);
+    printTxResult(await tx.wait());
+  });
+
+task("multitoken:setBurnApproval", "control burn permission")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("burner", "address to control the burn permission")
+  .addParam("approved", "true/false: approve or not")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setBurnApproval(taskArgs.burner, taskArgs.approved);
+    printTxResult(await tx.wait());
+  });
+
 task("multitoken:safetransferfrom", "transfer a token")
   .addOptionalParam(
     "contract",
