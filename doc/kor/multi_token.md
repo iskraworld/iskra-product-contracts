@@ -98,11 +98,3 @@ npx hardhat multitoken:deploy --name example --network baobab
 ## approval
 - npx hardhat multitoken:setapprovalforall --signer [signer] --password [password] --operator [operator] --approved [true/false] --network [network]
   - `npx hardhat multitoken:setapprovalforall --operator 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
-
-## access control
-- npx hardhat multitoken:grantrole --signer [signer] --password [password] --account [account] --role [role] --network [network]
-  - `npx hardhat multitoken:grantrole --account 70997970c51812dc3a010c7d01b50e0d17dc79c8 --role URI_SETTER_ROLE --network baobab`
-  - account에게 role을 부여합니다.
-- npx hardhat multitoken:revokerole --signer [signer] --password [password] --account [account] --role [role] --network [network]
-  - `npx hardhat multitoken:revokerole --account f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --role URI_SETTER_ROLE --network baobab`
-  - account로부터 role을 박탈합니다.

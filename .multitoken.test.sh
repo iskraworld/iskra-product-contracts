@@ -89,30 +89,3 @@ ${CMD_MULTITOKEN}:exist --id ${FTID1} --network ${NETWORK}
 ${CMD_MULTITOKEN}:exist --id ${FTID2} --network ${NETWORK}
 ${CMD_MULTITOKEN}:exist --id ${FTID3} --network ${NETWORK}
 ${CMD_MULTITOKEN}:exist --id ${NFTID0} --network ${NETWORK}
-
-
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "DEFAULT_ADMIN_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "URI_SETTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "MINTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "PAUSER_ROLE" --network ${NETWORK}
-
-${CMD_MULTITOKEN}:hasrole --account ${ACCOUNT2} --role "DEFAULT_ADMIN_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${ACCOUNT2} --role "URI_SETTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${ACCOUNT2} --role "MINTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${ACCOUNT2} --role "PAUSER_ROLE" --network ${NETWORK}
-
-${CMD_MULTITOKEN}:grantrole --account ${ACCOUNT2} --role "DEFAULT_ADMIN_ROLE" --network ${NETWORK} --signer deployer --password 123456789
-${CMD_MULTITOKEN}:grantrole --account ${ACCOUNT2} --role "URI_SETTER_ROLE" --network ${NETWORK} --signer deployer --password 123456789
-${CMD_MULTITOKEN}:grantrole --account ${ACCOUNT2} --role "MINTER_ROLE" --network ${NETWORK} --signer deployer --password 123456789
-${CMD_MULTITOKEN}:grantrole --account ${ACCOUNT2} --role "PAUSER_ROLE" --network ${NETWORK} --signer deployer --password 123456789
-
-${CMD_MULTITOKEN}:revokerole --account ${DEPLOYER} --role "DEFAULT_ADMIN_ROLE" --network ${NETWORK} --signer account2 --password 123456789
-${CMD_MULTITOKEN}:revokerole --account ${DEPLOYER} --role "URI_SETTER_ROLE"   --network ${NETWORK} --signer account2 --password 123456789
-${CMD_MULTITOKEN}:revokerole --account ${DEPLOYER} --role "MINTER_ROLE" --network ${NETWORK} --signer account2 --password 123456789
-${CMD_MULTITOKEN}:revokerole --account ${DEPLOYER} --role "PAUSER_ROLE" --network ${NETWORK} --signer account2 --password 123456789 
-
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "DEFAULT_ADMIN_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "URI_SETTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "MINTER_ROLE" --network ${NETWORK}
-${CMD_MULTITOKEN}:hasrole --account ${DEPLOYER} --role "PAUSER_ROLE" --network ${NETWORK}
-
