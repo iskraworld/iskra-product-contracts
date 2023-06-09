@@ -7,6 +7,9 @@ const {
 } = require("./functions");
 
 task("multitoken:deploy", "deploy Iskra MultiToken contract")
+  .addParam("name", "collection name")
+  .addFlag("pausable", "whether the token is pausable")
+  .addFlag("burnable", "whether the token is burnable")
   .addOptionalParam("uri", "baseuri", "")
   .addOptionalParam(
     "signer",
@@ -17,7 +20,12 @@ task("multitoken:deploy", "deploy Iskra MultiToken contract")
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const Token = await ethers.getContractFactory("MultiToken");
-    const token = await Token.connect(wallet).deploy(taskArgs.uri);
+    const token = await Token.connect(wallet).deploy(
+      taskArgs.uri,
+      taskArgs.name,
+      taskArgs.pausable,
+      taskArgs.burnable
+    );
     await token.deployed();
     printTxResult(await token.deployTransaction.wait());
     saveMultiTokenAddress(token);
