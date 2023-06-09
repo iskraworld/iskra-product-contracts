@@ -43,7 +43,7 @@ ex)
 npx hardhat wallet:add --name deployer --password 1234
 wallet [deployer] is added
 
-npx hardhat multitoken:deploy --signer deployer --password 1234
+npx hardhat multitoken:deploy --name example --signer deployer --password 1234
 ```
 - 보다 자세한 wallet 이용법은 [Wallet](wallet.md)를 참조하세요.
 
@@ -57,14 +57,16 @@ npx hardhat multitoken:deploy --signer deployer --password 1234
 - 예로 Baobab에서 수행하려면 아래처럼 옵션을 주면 됩니다.
 
 ```
-npx hardhat multitoken:deploy --network baobab
+npx hardhat multitoken:deploy --name example --network baobab
 ```
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
 ## 배포
-- npx hardhat multitoken:deploy [--signer [signer] --password [password]] [--uri [uri]] --network [network]
-  - `npx hardhat multitoken:deploy --network baobab`
+- npx hardhat multitoken:deploy [--signer [signer] --password [password]] [--uri [uri]] [--burnable] [--pausable] --name [name] --network [network]
+  - `npx hardhat multitoken:deploy --name example --network baobab`
   - uri은 optional 입니다.
+  - burnable은 optional 입니다. 활성화시 `burn` 및 `burnBatch` 함수를 사용할 수 있습니다.
+  - pausable은 optional 입니다. 활성화시 `pause` 및 `unpause`를 사용하여 운영 중 토큰 전송 등 기능차단을 제어할 수 있습니다.  
   - Iskra Multi Token을 uri와 함께 deploy 합니다.
   - `~/.iskra-console/deployed/multitoken_address.json` 파일에 배포된 컨트랙트의 주소를 저장합니다.
   - 나머지 커맨드 들은 `--contract` 옵션으로 오버라이드 하지 않는다면, 기본적으로 이 주소로 호출합니다.
