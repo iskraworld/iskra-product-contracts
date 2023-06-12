@@ -6,14 +6,14 @@ on:
 
 jobs:
   main:
-   runs-on: ubuntu-latest
-
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Spectra Github Action Step
-      uses: spark63/spectra-github-action@v0.1.0
-      with:
-        api_key: ${{ secrets.SPECTRA_API_KEY }}
-        path: "contracts"
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Spectra Github Action Step
+        uses: spark63/spectra-github-action@v0.1.0
+        with:
+          api_key: ${{ secrets.SPECTRA_API_KEY }}
+          path: "contracts"
