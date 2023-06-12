@@ -16,4 +16,4 @@ jobs:
         uses: spark63/spectra-github-action@v0.1.0
         with:
           api_key: ${{ secrets.SPECTRA_API_KEY }}
-          path: "contracts"
+          path: "contracts/token/ERC1155"
