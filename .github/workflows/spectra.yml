@@ -2,7 +2,7 @@ name: Spectra Github Action
 
 on:
   push:
-    branches: [“main”]
+    branches: [main]
 
 jobs:
   main:
