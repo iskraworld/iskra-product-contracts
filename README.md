@@ -60,7 +60,7 @@ npx hardhat getTransaction --hash [hash]
 ```
 ### multitoken
 ```
-npx hardhat multitoken:deploy
+npx hardhat multitoken:deploy --name [name]
 ...
 ```
 For more information, please refer [MultiToken](doc/kor/multi_token.md)

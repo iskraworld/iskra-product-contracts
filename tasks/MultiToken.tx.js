@@ -7,6 +7,9 @@ const {
 } = require("./functions");
 
 task("multitoken:deploy", "deploy Iskra MultiToken contract")
+  .addParam("name", "collection name")
+  .addFlag("pausable", "whether the token is pausable")
+  .addFlag("burnable", "whether the token is burnable")
   .addOptionalParam("uri", "baseuri", "")
   .addOptionalParam(
     "signer",
@@ -17,10 +20,57 @@ task("multitoken:deploy", "deploy Iskra MultiToken contract")
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const Token = await ethers.getContractFactory("MultiToken");
-    const token = await Token.connect(wallet).deploy(taskArgs.uri);
+    const token = await Token.connect(wallet).deploy(
+      taskArgs.uri,
+      taskArgs.name,
+      taskArgs.pausable,
+      taskArgs.burnable
+    );
     await token.deployed();
     printTxResult(await token.deployTransaction.wait());
     saveMultiTokenAddress(token);
+  });
+
+task("multitoken:setMintApproval", "control mint permission")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("minter", "address to control the mint permission")
+  .addParam("approved", "true/false: approve or not")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setMintApproval(taskArgs.minter, taskArgs.approved);
+    printTxResult(await tx.wait());
+  });
+
+task("multitoken:setBurnApproval", "control burn permission")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("burner", "address to control the burn permission")
+  .addParam("approved", "true/false: approve or not")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setBurnApproval(taskArgs.burner, taskArgs.approved);
+    printTxResult(await tx.wait());
   });
 
 task("multitoken:safetransferfrom", "transfer a token")
@@ -256,65 +306,5 @@ task("multitoken:setapprovalforall", "set approval for a account/operator pair")
       taskArgs.operator,
       JSON.parse(taskArgs.approved)
     );
-    printTxResult(await tx.wait());
-  });
-
-task("multitoken:grantrole", "grant a role to the account")
-  .addOptionalParam(
-    "contract",
-    "The address of deployed Iskra MultiToken contract",
-    ""
-  )
-  .addOptionalParam(
-    "signer",
-    "The signer signs this transaction. wallet:add first"
-  )
-  .addOptionalParam("password", "password for decrypting wallet")
-  .addParam("account", "account")
-  .addParam(
-    "role",
-    "DEFAULT_ADMIN_ROLE, URI_SETTER_ROLE, MINTER_ROLE, PAUSER_ROLE"
-  )
-  .setAction(async (taskArgs) => {
-    printArguments(taskArgs);
-    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
-    let hashedRole = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes(taskArgs.role)
-    );
-    if (taskArgs.role === "DEFAULT_ADMIN_ROLE") {
-      hashedRole = ethers.utils.formatBytes32String("");
-    }
-    const tx = await token.grantRole(hashedRole, taskArgs.account);
-    printTxResult(await tx.wait());
-  });
-
-task("multitoken:revokerole", "grant a role to the account")
-  .addOptionalParam(
-    "contract",
-    "The address of deployed Iskra MultiToken contract",
-    ""
-  )
-  .addOptionalParam(
-    "signer",
-    "The signer signs this transaction. wallet:add first"
-  )
-  .addOptionalParam("password", "password for decrypting wallet")
-  .addParam("account", "account")
-  .addParam(
-    "role",
-    "DEFAULT_ADMIN_ROLE, URI_SETTER_ROLE, MINTER_ROLE, PAUSER_ROLE"
-  )
-  .setAction(async (taskArgs) => {
-    printArguments(taskArgs);
-    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
-    let hashedRole = ethers.utils.keccak256(
-      ethers.utils.toUtf8Bytes(taskArgs.role)
-    );
-    if (taskArgs.role === "DEFAULT_ADMIN_ROLE") {
-      hashedRole = ethers.utils.formatBytes32String("");
-    }
-    const tx = await token.revokeRole(hashedRole, taskArgs.account);
     printTxResult(await tx.wait());
   });

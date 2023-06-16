@@ -6,11 +6,10 @@
 - 다만, command 스크립트에서는 supply가 1인 토큰을 NFT로 간주하여 추가 mint가 불가능하도록 되어 있습니다.
 
 ## 권한
-- OWNER, URI_SETTER, MINTER, PAUSER 네 가지 역할(role)이 정의되어 있으며, 초기 배포자는 이 모든 권한을 유일하게 가집니다.
-- OWNER 권한은 URI_SETTER, MINTER, PAUSER를 정의할 수 있습니다.
-- URI_SETTER 권한은 토큰의 uri 정보를 바꿀 수 있습니다.
+- OWNER, MINTER, BURNER 세 가지 역할이 정의되어 있으며, 초기 배포자는 이 모든 권한을 유일하게 가집니다.
+- OWNER 권한은 MINTER, BURNER를 정의할 수 있습니다.
 - MINTER 권한은 토큰을 mint할 수 있습니다.
-- PAUSER 권한은 토큰을 pause할 수 있습니다.
+- BURNER 권한은 소유한 토큰을 burn할 수 있습니다.
 
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
@@ -43,7 +42,7 @@ ex)
 npx hardhat wallet:add --name deployer --password 1234
 wallet [deployer] is added
 
-npx hardhat multitoken:deploy --signer deployer --password 1234
+npx hardhat multitoken:deploy --name example --signer deployer --password 1234
 ```
 - 보다 자세한 wallet 이용법은 [Wallet](wallet.md)를 참조하세요.
 
@@ -57,14 +56,16 @@ npx hardhat multitoken:deploy --signer deployer --password 1234
 - 예로 Baobab에서 수행하려면 아래처럼 옵션을 주면 됩니다.
 
 ```
-npx hardhat multitoken:deploy --network baobab
+npx hardhat multitoken:deploy --name example --network baobab
 ```
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
 ## 배포
-- npx hardhat multitoken:deploy [--signer [signer] --password [password]] [--uri [uri]] --network [network]
-  - `npx hardhat multitoken:deploy --network baobab`
+- npx hardhat multitoken:deploy [--signer [signer] --password [password]] [--uri [uri]] [--burnable] [--pausable] --name [name] --network [network]
+  - `npx hardhat multitoken:deploy --name example --network baobab`
   - uri은 optional 입니다.
+  - burnable은 optional 입니다. 활성화시 `burn` 및 `burnBatch` 함수를 사용할 수 있습니다.
+  - pausable은 optional 입니다. 활성화시 `pause` 및 `unpause`를 사용하여 운영 중 토큰 전송 등 기능차단을 제어할 수 있습니다.  
   - Iskra Multi Token을 uri와 함께 deploy 합니다.
   - `~/.iskra-console/deployed/multitoken_address.json` 파일에 배포된 컨트랙트의 주소를 저장합니다.
   - 나머지 커맨드 들은 `--contract` 옵션으로 오버라이드 하지 않는다면, 기본적으로 이 주소로 호출합니다.
@@ -97,10 +98,12 @@ npx hardhat multitoken:deploy --network baobab
 - npx hardhat multitoken:setapprovalforall --signer [signer] --password [password] --operator [operator] --approved [true/false] --network [network]
   - `npx hardhat multitoken:setapprovalforall --operator 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
 
-## access control
-- npx hardhat multitoken:grantrole --signer [signer] --password [password] --account [account] --role [role] --network [network]
-  - `npx hardhat multitoken:grantrole --account 70997970c51812dc3a010c7d01b50e0d17dc79c8 --role URI_SETTER_ROLE --network baobab`
-  - account에게 role을 부여합니다.
-- npx hardhat multitoken:revokerole --signer [signer] --password [password] --account [account] --role [role] --network [network]
-  - `npx hardhat multitoken:revokerole --account f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --role URI_SETTER_ROLE --network baobab`
-  - account로부터 role을 박탈합니다.
+## approval for mint permission
+- MINTER 권한을 부여하거나 취소합니다.
+- npx hardhat multitoken:setMintApproval --signer [signer] --password [password] --minter [minter] --approved [true/false] --network [network]
+  - `npx hardhat multitoken:setMintApproval --minter 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
+
+## approval for burn permission
+- BURNER 권한을 부여하거나 취소합니다.
+- npx hardhat multitoken:setBurnApproval --signer [signer] --password [password] --burner [burner] --approved [true/false] --network [network]
+  - `npx hardhat multitoken:setBurnApproval --burner 70997970c51812dc3a010c7d01b50e0d17dc79c8 --approved true --network baobab`
