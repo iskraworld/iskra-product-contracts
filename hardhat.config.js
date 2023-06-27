@@ -11,6 +11,7 @@ require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
 require("./tasks/Vesting.tx");
+require("./tasks/flatten");
 require("hardhat-gas-reporter");
 
 
@@ -81,7 +82,7 @@ module.exports = {
     path: "abis",
     clear: true,
     flat: true,
-    only: ["GameToken","GovernanceToken", "UtilityToken", "MultiToken","Vesting"],
+    only: ["GameToken","GovernanceToken", "UtilityToken", "MultiToken","Vesting","ItemNFT","ItemNFTSnapshot"],
     except: ["mock"],
     spacing: 2,
     pretty: false
