@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, contract } = require("hardhat");
 const { AddressZero } = ethers.constants;
 
 const {
@@ -55,7 +55,9 @@ describe("ItemNFTSnapshot", function () {
     });
 
     it("changes base uri and emits the eventlog", async function () {
-      await expect(this.contract.setBaseURI(newURI)).not.reverted;
+      await expect(this.contract.setBaseURI(newURI))
+        .emit(this.contract, "SetBaseURI")
+        .withArgs(newURI);
       expect(await this.contract.tokenURI(1)).to.be.equal(
         newURI + firstTokenId
       );

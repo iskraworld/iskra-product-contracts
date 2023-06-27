@@ -33,6 +33,8 @@ contract ItemNFTSnapshot is
 
     event MintApproval(address indexed minter, bool indexed approved);
 
+    event SetBaseURI(string uri);
+
     constructor(
         string memory name_,
         string memory symbol_,
@@ -146,6 +148,7 @@ contract ItemNFTSnapshot is
 
     function setBaseURI(string memory uri_) public onlyOwner {
         baseURI = uri_;
+        emit SetBaseURI(uri_);
     }
 
     function _getCurrentSnapshotId() internal view override returns (uint256) {
