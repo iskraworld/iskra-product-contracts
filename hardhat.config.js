@@ -11,7 +11,6 @@ require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
 require("./tasks/Vesting.tx");
-require("./tasks/flatten");
 require("hardhat-gas-reporter");
 
 
