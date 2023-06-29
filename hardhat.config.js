@@ -81,7 +81,7 @@ module.exports = {
     path: "abis",
     clear: true,
     flat: true,
-    only: ["GameToken","GovernanceToken", "UtilityToken", "MultiToken","Vesting"],
+    only: ["GameToken","GovernanceToken", "UtilityToken", "MultiToken","Vesting","ItemNFT","ItemNFTSnapshot"],
     except: ["mock"],
     spacing: 2,
     pretty: false
