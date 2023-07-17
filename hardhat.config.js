@@ -2,6 +2,7 @@ require("@nomiclabs/hardhat-truffle5");
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
 require('hardhat-abi-exporter');
+require("./tasks/deploy");
 require("./tasks/transaction.query");
 require("./tasks/wallet");
 require("./tasks/MultiToken.tx");
