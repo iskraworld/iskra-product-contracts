@@ -711,6 +711,19 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "setOriginURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
