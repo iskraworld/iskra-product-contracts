@@ -1,7 +1,7 @@
 {
   "name": "@iskraworld/iskra-product-contracts",
   "description": "ISKRA tokens(ERC20, ERC721, ERC1155), vesting contracts",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "scripts": {
     "test": "hardhat test",
     "abi": "hardhat export-abi",
@@ -26,16 +26,16 @@
     "@openzeppelin/hardhat-upgrades": "^1.20.0",
     "@openzeppelin/test-helpers": "^0.5.15",
     "chai": "^4.2.0",
+    "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.9",
     "hardhat": "^2.9.9",
     "hardhat-abi-exporter": "^2.8.0",
     "hardhat-gas-reporter": "^1.0.8",
+    "hardhat-preprocessor": "^0.1.4",
     "prettier": "^2.7.1",
     "prettier-plugin-solidity": "^1.0.0-beta.24",
-    "solidity-coverage": "^0.7.21",
-    "ethereumjs-wallet": "^1.0.2",
-    "hardhat-preprocessor": "^0.1.4",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "solidity-coverage": "^0.7.21"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",
