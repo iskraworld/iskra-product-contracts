@@ -169,7 +169,7 @@ describe("MultiToken", function () {
 
     it("should be returned the changed _uri when don't set an uri per tokenId", async function () {
       const newUri = "https://newURI/{id}";
-      await token.setOriginURI(newUri);
+      await token.setURI(newUri);
       expect(await token.uri(tokenId)).to.be.equal(newUri);
     });
 
@@ -177,7 +177,7 @@ describe("MultiToken", function () {
       const baseUri = "https://uri-storage-base-uri/";
       const tokenUri = "test";
       await token.setBaseURI(baseUri);
-      await token.setURI(tokenId, tokenUri);
+      await token.setTokenURI(tokenId, tokenUri);
       expect(await token.uri(tokenId)).to.be.equal(baseUri + tokenUri);
     });
   });

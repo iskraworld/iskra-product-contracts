@@ -25,7 +25,7 @@ function shouldBehaveLikeERC1155URIStorage(ERC1155URIStorageMock, holder) {
 
     it("can request the token uri, returning the concatenated uri if a token uri was set", async function () {
       const tokenUri = "1234/";
-      const receipt = await this.token.setURI(tokenId, tokenUri);
+      const receipt = await this.token.setTokenURI(tokenId, tokenUri);
 
       const receivedTokenUri = await this.token.uri(tokenId);
 
@@ -50,7 +50,7 @@ function shouldBehaveLikeERC1155URIStorage(ERC1155URIStorageMock, holder) {
 
     it("can request the token uri, returning the token uri if a token uri was set", async function () {
       const tokenUri = "ipfs://1234/";
-      const receipt = await this.token.setURI(tokenId, tokenUri);
+      const receipt = await this.token.setTokenURI(tokenId, tokenUri);
 
       const receivedTokenUri = await this.token.uri(tokenId);
 

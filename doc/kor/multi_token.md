@@ -91,8 +91,14 @@ npx hardhat multitoken:deploy --name example --network baobab
   - `npx hardhat multitoken:safetransferfrom-batch --from f39fd6e51aad88f6f4ce6ab8827279cfffb92266 --to 70997970c51812dc3a010c7d01b50e0d17dc79c8 --ids 1,2,3,0x8000000000000000000000000000000000000000000000000000000000000000 --amounts 1,2,3,1 --network baobab`
 
 ## uri
-- npx hardhat multitoken:seturi --signer [signer] --password [password] --id [id] --uri [uri] --network [network]
-  - `npx hardhat multitoken:seturi --id 1 --uri 'IT IS SAMPLE URI' --network baobab`
+- npx hardhat multitoken:seturi --signer [signer] --password [password] --uri [uri] --network [network]
+  - `npx hardhat multitoken:seturi --uri 'IT IS SAMPLE URI' --network baobab`
+
+- npx hardhat multitoken:setbaseuri --signer [signer] --password [password] --uri [uri] --network [network]
+  - `npx hardhat multitoken:setbaseuri --uri 'IT IS SAMPLE BASE URI' --network baobab`
+
+- npx hardhat multitoken:settokenuri --signer [signer] --password [password] --id [id] --uri [uri] --network [network]
+  - `npx hardhat multitoken:settokenuri --id 1 --uri 'IT IS SAMPLE TOKEN URI' --network baobab`
 
 ## approval
 - npx hardhat multitoken:setapprovalforall --signer [signer] --password [password] --operator [operator] --approved [true/false] --network [network]
