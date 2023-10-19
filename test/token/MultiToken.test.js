@@ -7,7 +7,7 @@ describe("MultiToken", function () {
   let MultiToken;
 
   const PAUSER_ROLE = utils.keccak256(utils.toUtf8Bytes("PAUSER_ROLE"));
-  const baseUri = "https://test-base-uri/";
+  const uri = "https://test-uri/";
   const name = "testToken";
   let burnable = false,
     pausable = false;
@@ -27,7 +27,7 @@ describe("MultiToken", function () {
     MultiToken = await ethers.getContractFactory("MultiToken", deployer);
 
     this.token = this.contract = await MultiToken.deploy(
-      baseUri,
+      uri,
       name,
       pausable,
       burnable
@@ -72,7 +72,7 @@ describe("MultiToken", function () {
     let pausableToken;
 
     beforeEach(async function () {
-      pausableToken = await MultiToken.deploy(baseUri, name, true, false);
+      pausableToken = await MultiToken.deploy(uri, name, true, false);
       await pausableToken.deployed();
     });
 
@@ -90,7 +90,7 @@ describe("MultiToken", function () {
     let burnableToken;
 
     beforeEach(async function () {
-      burnableToken = await MultiToken.deploy(baseUri, name, false, true);
+      burnableToken = await MultiToken.deploy(uri, name, false, true);
       await burnableToken.deployed();
     });
 
@@ -154,6 +154,31 @@ describe("MultiToken", function () {
       await expect(tx).to.be.revertedWith(
         "ERC1155: caller is not token owner or approved"
       );
+    });
+  });
+
+  describe("Controlling deployed token URIs", function () {
+    let token;
+    const tokenId = 1;
+
+    beforeEach(async function () {
+      token = await MultiToken.deploy(uri, name, false, false);
+      await token.deployed();
+      await token.mint(deployer.address, tokenId, 1, "0x");
+    });
+
+    it("should be returned the changed _uri when don't set an uri per tokenId", async function () {
+      const newUri = "https://newURI/{id}";
+      await token.setURI(newUri);
+      expect(await token.uri(tokenId)).to.be.equal(newUri);
+    });
+
+    it("should be ignored the origin uri when set the tokenUri and baseUri", async function () {
+      const baseUri = "https://uri-storage-base-uri/";
+      const tokenUri = "test";
+      await token.setBaseURI(baseUri);
+      await token.setTokenURI(tokenId, tokenUri);
+      expect(await token.uri(tokenId)).to.be.equal(baseUri + tokenUri);
     });
   });
 });

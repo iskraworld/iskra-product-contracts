@@ -721,6 +721,19 @@
         "type": "string"
       }
     ],
+    "name": "setTokenURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
     "name": "setURI",
     "outputs": [],
     "stateMutability": "nonpayable",

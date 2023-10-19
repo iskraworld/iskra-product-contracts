@@ -57,7 +57,11 @@ contract MultiToken is
         return ERC1155URIStorage.uri(tokenId);
     }
 
-    function setURI(uint256 tokenId, string calldata tokenURI_)
+    function setURI(string calldata uri_) external onlyOwner {
+        _setURI(uri_);
+    }
+
+    function setTokenURI(uint256 tokenId, string calldata tokenURI_)
         public
         onlyOwner
     {

@@ -272,13 +272,53 @@ task("multitoken:seturi", "set URI")
     "The signer signs this transaction. wallet:add first"
   )
   .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("uri", "uri string")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setURI(taskArgs.uri);
+    printTxResult(await tx.wait());
+  });
+
+task("multitoken:setbaseuri", "set Base URI")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
+  .addParam("uri", "uri string")
+  .setAction(async (taskArgs) => {
+    printArguments(taskArgs);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
+    const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
+    const tx = await token.setBaseURI(taskArgs.uri);
+    printTxResult(await tx.wait());
+  });
+
+task("multitoken:settokenuri", "set Token URI")
+  .addOptionalParam(
+    "contract",
+    "The address of deployed Iskra MultiToken contract",
+    ""
+  )
+  .addOptionalParam(
+    "signer",
+    "The signer signs this transaction. wallet:add first"
+  )
+  .addOptionalParam("password", "password for decrypting wallet")
   .addParam("id", "The token id")
   .addParam("uri", "uri string")
   .setAction(async (taskArgs) => {
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
-    const tx = await token.setURI(taskArgs.id, taskArgs.uri);
+    const tx = await token.setTokenURI(taskArgs.id, taskArgs.uri);
     printTxResult(await tx.wait());
   });
 
