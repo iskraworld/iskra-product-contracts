@@ -73,6 +73,10 @@ module.exports = {
     ethereum: {
       url: "https://mainnet.infura.io/v3/",
       networkId: 1
+    },
+    baseSepolia: {
+      url: "https://sepolia.base.org",
+      networkId: 84532
     }
   },
   gasReporter: {
