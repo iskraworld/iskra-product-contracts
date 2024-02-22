@@ -45,13 +45,13 @@ module.exports = {
         mnemonic: "crater kiwi depth alley myth flag bleak swing fragile abandon pupil twist"
       }
     },
-    base: {
-      url: "https://iec2-user@ec2-52-91-69-221.compute-1.amazonaws.com:8545",
-      networkId: 84531,
-      accounts: {
-        mnemonic: "crater kiwi depth alley myth flag bleak swing fragile abandon pupil twist"
-      }
-    },
+    // base: {
+    //   url: "https://iec2-user@ec2-52-91-69-221.compute-1.amazonaws.com:8545",
+    //   networkId: 84531,
+    //   accounts: {
+    //     mnemonic: "crater kiwi depth alley myth flag bleak swing fragile abandon pupil twist"
+    //   }
+    // },
     baobab: {
       url: "https://public-en-baobab.klaytn.net",
       networkId: 1001,
