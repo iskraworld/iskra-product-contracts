@@ -77,6 +77,10 @@ module.exports = {
     baseSepolia: {
       url: "https://sepolia.base.org",
       networkId: 84532
+    },
+    base: {
+      url: "https://mainnet.base.org",
+      networkId: 8453
     }
   },
   gasReporter: {
