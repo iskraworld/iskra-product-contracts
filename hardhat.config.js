@@ -2,6 +2,7 @@ require("@nomiclabs/hardhat-truffle5");
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
 require('hardhat-abi-exporter');
+require("./tasks/CheckIO.tx");
 require("./tasks/deploy");
 require("./tasks/transaction.query");
 require("./tasks/wallet");
@@ -12,6 +13,7 @@ require("./tasks/MultiToken.query");
 require("./tasks/GameToken.tx");
 require("./tasks/UtilityToken.tx");
 require("./tasks/Vesting.tx");
+require("./tasks/flatten");
 require("hardhat-gas-reporter");
 
 
@@ -29,13 +31,12 @@ module.exports = {
     })
   },
   solidity: {
-    version: "0.8.7",
+    version: "0.8.22",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1
       },
-      evmVersion: "constantinople"
+      evmVersion: "istanbul"
     }
   },
   networks: {
