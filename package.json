@@ -26,6 +26,7 @@
     "@nomiclabs/hardhat-web3": "^2.0.0",
     "@openzeppelin/hardhat-upgrades": "^1.20.0",
     "@openzeppelin/test-helpers": "^0.5.15",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.2.6",
     "chai": "^4.2.0",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.9",
