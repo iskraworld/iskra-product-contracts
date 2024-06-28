@@ -148,13 +148,6 @@ task("multitoken:mint", "mint a token")
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
-    const supply = await token.totalSupply(taskArgs.id);
-    if (supply.eq(1)) {
-      console.error(
-        `token id [${taskArgs.id}] is treated as non-fungible and cannot be minted more than 1`
-      );
-      return;
-    }
     const tx = await token.mint(
       taskArgs.to,
       taskArgs.id,
@@ -181,15 +174,6 @@ task("multitoken:mint-batch", "mint tokens")
     printArguments(taskArgs);
     const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = (await getMultiToken(taskArgs.contract)).connect(wallet);
-    for (let id in taskArgs.ids.split(",")) {
-      let supply = await token.totalSupply(id);
-      if (supply.eq(1)) {
-        console.error(
-          `token id [${id}] is treated as non-fungible and cannot be minted more than 1`
-        );
-        return;
-      }
-    }
     const tx = await token.mintBatch(
       taskArgs.to,
       taskArgs.ids.split(","),
