@@ -57,4 +57,3 @@ task("mkp:register-card-mystery", "register mystery collection")
     );
     printTxResult(await tx.wait());
   });
-
