@@ -1,5 +1,5 @@
 const { printTxResult, printArguments, walletLoad } = require("./functions");
-const MarketPlace = require("../res/MarketPlace.json");
+const MarketPlace = require("../abis-imported/MarketPlace.json");
 const { parseEther } = require("@ethersproject/units");
 
 task("mkp:register-card-mystery", "register mystery collection")

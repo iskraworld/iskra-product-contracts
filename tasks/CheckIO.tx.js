@@ -1,6 +1,6 @@
 const { BigNumber } = require("ethers");
 const { printTxResult, printArguments, walletLoad } = require("./functions");
-const FTCheckIO = require("../res/FTCheckIO.json");
+const FTCheckIO = require("../abis-imported/FTCheckIO.json");
 
 task("checkio:checkin", "Check in assets to the syncmodule")
   .addOptionalParam(

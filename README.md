@@ -50,12 +50,14 @@ npx hardhat --help
 ```
 ### wallet
 ```
-npx hardhat wallet:add --name [name]
-...
+npx hardhat wallet:add [name]
+
+e.g.
+npx hardhat wallet:add test_wallet
 ```
 ### transaction
 ```
-npx hardhat getTransaction --hash [hash] 
+npx hardhat getTransaction --hash [hash]
 ...
 ```
 ### multitoken
