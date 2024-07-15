@@ -24,8 +24,7 @@ task("mkp:register-card-mystery", "register mystery collection")
 
     const price = parseEther(taskArgs.price);
 
-    // const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
-    const wallet = await ethers.getSigner(taskArgs.signer);
+    const wallet = await walletLoad(taskArgs.signer, taskArgs.password);
     const token = await ethers.getContractAt("IERC721", taskArgs.nft, wallet);
 
     console.log("\nApproving tokens");
