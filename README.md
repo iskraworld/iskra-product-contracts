@@ -50,41 +50,49 @@ npx hardhat --help
 ```
 ### wallet
 ```
-npx hardhat wallet:add --name [name]
-...
+npx hardhat wallet:add [name]
+
+e.g.
+npx hardhat wallet:add test_wallet
 ```
 ### transaction
 ```
-npx hardhat getTransaction --hash [hash] 
+npx hardhat getTransaction [hash]
 ...
 ```
 ### multitoken
 ```
-npx hardhat multitoken:deploy --name [name]
-...
+npx hardhat deploy MultiToken [uri] [name] [pausable] [burnable]
+
+e.g.
+npx hardhat deploy MultiToken "https://metadata.url/{id}" MyToken false false
 ```
 For more information, please refer [MultiToken](doc/kor/multi_token.md)
 
 ### gametoken
 ```
-npx hardhat gametoken:deploy --name [name] --symbol [symbol] --supply [supply; 1 = 10**decimals]
-ex)
-npx hardhat gametoken:deploy --name "Sample token" --symbol SMP --supply 1000000000
+npx hardhat deploy GameToken [name] [symbol] [initialSupply]
+
+e.g.
+npx hardhat deploy GameToken MyToken GT1 1_000_000_000e18
 ```
 For more information, please refer [GameToken](doc/kor/game_token.md)
 
 ### utilitytoken
 ```
-npx hardhat utilitytoken:deploy --name [name] --symbol [symbol] --minter [first minter address]
-ex)
-npx hardhat utilitytoken:deploy --name Candy --symbol CND --minter 0x1ABC7154748D1CE5144478CDEB574AE244B939B5
+npx hardhat deploy UtilityToken [name] [symbol] [firstMinter]
+
+e.g.
+npx hardhat deploy UtilityToken MyToken GT2 0x3e947aE0A245AcD51A1e1021fE8B50c22D215758
 ```
 For more information, please refer [GameToken](doc/kor/utility_token.md)
 
 ### itemnft
 ```
-npx hardhat itemnft:deploy
-...
+npx hardhat deploy [ItemNFT | ItemNFTSnapshot] [name] [symbol] [uri] [burnable]
+
+e.g.
+npx hardhat deploy ItemNFTSnapshot MyToken IT1 "https://metadata.url/" true
 ```
 For more information, please refer [ItemNFT](doc/kor/item_nft.md)
 

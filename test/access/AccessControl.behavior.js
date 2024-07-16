@@ -1,5 +1,6 @@
 const { expectEvent, expectRevert } = require("@openzeppelin/test-helpers");
 const { expect } = require("chai");
+const { utils } = require("ethers");
 
 const {
   shouldSupportInterfaces,
@@ -7,8 +8,8 @@ const {
 
 const DEFAULT_ADMIN_ROLE =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
-const ROLE = web3.utils.soliditySha3("ROLE");
-const OTHER_ROLE = web3.utils.soliditySha3("OTHER_ROLE");
+const ROLE = utils.keccak256(utils.toUtf8Bytes("ROLE"));
+const OTHER_ROLE = utils.keccak256(utils.toUtf8Bytes("OTHER_ROLE"));
 
 function shouldBehaveLikeAccessControl(
   errorPrefix,

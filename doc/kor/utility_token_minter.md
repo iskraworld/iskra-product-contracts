@@ -1,7 +1,7 @@
-# Check IO
+# Utility Token Minter
 
 ## 개요
-- 싱크모듈과 인터랙션하는 task의 모음입니다.
+- xToken으로 Token Mint 하기위한 task의 모음입니다.
 
 ## 지갑 준비
 - 기본적으로 hardhat config에 배포 계정이 세팅되어 있어, 테스트 목적으로 배포할 땐 별도의 배포 계정을 준비할 필요가 없습니다.
@@ -51,26 +51,4 @@ npx hardhat deploy ... --network baseSepolia
 ```
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
-## 체크인하기
-- 특정 버켓에 체크인합니다.
-- 사전에 토큰의 approve 를 하여야 합니다.
-  - npx hardhat call [token address] IERC20 approve [checkio] [amount; decimals 고려한 수량]
-  - ```
-    e.g.)
-    npx hardhat call 0x9f7f9a6D9bd84E764a2705211b73CaD811CE357D IERC20 approve 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 100e18 --network baseSepolia
-    ```
-- 체크인 실행
-```
-npx hardhat call [checkio] FTCheckIO "checkIn(address,uint8,address,uint256,bytes)" [token] [bucketId] [account] [amount] [data]
-
-ex)
-npx hardhat call 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 FTCheckIO "checkIn(address,uint8,address,uint256,bytes)" 0x2216ba99b517B20507c5118e560443f2673D48eA 0 0x9f7f9a6D9bd84E764a2705211b73CaD811CE357D 10e18 0x --network baseSepolia
-```
-
-- 옵션 설명
-  - `[checkio]`(required): 인터랙션할 체크인 컨트랙트의 주소입니다.
-  - `[token]`(required): 체크인할 토큰의 주소입니다.
-  - `[bucketId]`(required): 체크인할 버켓의 ID입니다.
-  - `[account]`(required): 체크인할 계정의 주소입니다.
-  - `[amount]`(required): 체크인할 토큰의 수량입니다. (decimals를 고려해야 합니다. 예제에서는 `e18` 을 추가하여 decimals 18에 맞추었습니다.)
-  - `[data]`(required): 체크인하면서 추가할 데이터입니다. hex string 입니다. `0x` 를 입력하면 빈 데이터를 의미합니다.
+## UtilityTokenMinter 배포

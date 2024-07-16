@@ -21,7 +21,7 @@
 ## 빌드
 소스 코드를 다운 받습니다. npm, git 등은 설치되어 있다고 가정합니다.
 ```
-git clone https://github.com/iskraworld/iskra-product-cmd.git
+git clone https://github.com/iskraworld/iskra-product-contracts.git
 ```
 <br>
 그런 후 의존성 모듈들을 설치합니다.
@@ -38,32 +38,49 @@ npx hardhat compile
 
 ## 지갑 준비
 - 기본적으로 hardhat config에 배포 계정이 세팅되어 있어, 테스트 목적으로 배포할 땐 별도의 배포 계정을 준비할 필요가 없습니다.
-- `--signer`, `--password` 옵션을 주면 hardhat config에 설정된 계정이 아닌, 지정한 계정으로 배포를 수행합니다. 사전에 wallet을 생성해야 가능합니다.
-- hardhat node가 아닌 외부 블록체인(baobab, ethereum, goerli)에 배포하려면 기본 계정에 base coin(Klay 또는 Ether 등)이 준비되어 있어야 합니다.
-- 별도의 지갑으로 배포하거나 트랜잭션을 수행하려면 지갑을 미리 준비하시고 `--signer` 옵션을 사용하시기 바랍니다.
+- hardhat config에 설정된 계정이 아닌, 지정한 계정으로 배포를 수행하려면 세가지 방법이 있습니다
+    - `npx hardhat wallet:add` 로 등록한 wallet 사용
+        - 사전에  `wallet:add` 명령어로 지갑을 생성합니다.
+        - ```
+          npx hardhat wallet:add [name] [--password [password]]
 
-```
-npx hardhat wallet:add --name [name] --password [password]
+          ex)
+            npx hardhat wallet:add deployer
+            Password:
+            Confirm Password:
+            wallet [deployer] is added
+          ```
+        - `--wallet [wallet name]` 옵션을 사용합니다.
+        - ```
+          npx hardhat deploy ... --wallet deployer
+          ```
+        - 보다 자세한 wallet 이용법은 [Wallet](wallet.md)를 참조하세요.
+    - 임의의 로컬 저장소의 Json Keyfile 사용
+        - `--json-keyfile [keyfile path]` 옵션을 사용합니다.
+        - ```
+          npx hardhat deploy ... --json-keyfile ../deployer.keyfile.json
+          ```
+    - Hardware Wallet 사용
+        - `--ledger [ledger address]` 옵션을 사용합니다.
+        - ```
+          npx hardhat deploy ... --ledger 0x3e947aE0A245AcD51A1e1021fE8B50c22D215758
+          ```
+- hardhat node가 아닌 외부 블록체인(klaytn, ethereum, base)에 배포하려면 기본 계정에 base coin(Klay 또는 Ether 등)이 준비되어 있어야 합니다.
 
-ex)
-npx hardhat wallet:add --name deployer --password 1234
-wallet [deployer] is added
-
-npx hardhat vesting:deploy_impl --signer deployer --password 1234
-```
-- 보다 자세한 wallet 이용법은 [Wallet](wallet.md)를 참조하세요.
 
 ## 네트워크 선택
 - 모든 커맨드에 네트워크 옵션(`--network`)을 줄 수 있습니다. 네트워크 옵션을 주지 않으면 hardhat node(local)에서 수행됩니다.
 - 네트워크 설정은 `harhat.config.js`에 있습니다. 기본적으로 다음 네트워크를 지원합니다. 필요시 네트워크 정보를 추가하시기 바랍니다.
-  - `baobab`: Klaytn testnet
-  - `cypress`: Klaytn mainnet
-  - `goerli`: Ethereum testnet
-  - `ethereum`: Ethereum mainnet
-- 예로 Baobab에서 수행하려면 아래처럼 옵션을 주면 됩니다.
+    - `baobab`: Klaytn testnet
+    - `cypress`: Klaytn mainnet
+    - `sepolia`: Ethereum testnet
+    - `ethereum`: Ethereum mainnet
+    - `baseSepolia`: Base testnet
+    - `base`: Base mainnet
+- 예로 Base testnet에서 수행하려면 아래처럼 옵션을 주면 됩니다.
 
 ```
-npx hardhat vesting:deploy_impl --network baobab
+npx hardhat deploy ... --network baseSepolia
 ```
 - [주의] hardhat node는 매번 수행될 때마다 체인이 리셋(초기화) 됩니다. 따라서 커맨드 실행과 실행 사이에 연속성이 없기 때문에 배포한 컨트랙트를 새로운 커맨드로 실행할 수가 없습니다.
 
@@ -80,7 +97,7 @@ npx hardhat vesting:deploy_impl --network baobab
 npx hardhat vesting:deploy_impl [--signer [signer] --password [password]]
 
 ex)
-npx hardhat vesting:deploy_impl --network baobab  
+npx hardhat vesting:deploy_impl --network baobab
 ============Args================
 { signer: undefined, password: undefined }
 ================================
@@ -165,7 +182,7 @@ npx hardhat vesting:deploy --network baobab
   - `--token`(optional): 베스팅할 토큰을 지정합니다. 생략시 `~/.iskra-console/deployed/gametoken-address.json`의 값을 사용합니다.
   - `--period`(optional): 베스팅 unlock 단위 시간을 설정합니다. 이 시간마다 일정 물량이 unlock이 됩니다. 기본값은 730이고, 단위는 시간입니다.
   - `--duration`(optional): 베스팅 총 기간을 설정합니다. period 기간을 총 몇 번 할지 설정합니다. 기본값은 36입니다. (730시간 * 36 = 3년)
-  
+
 ```
 npx hardhat gametoken:approve [--signer [signer] --password [password]] --spender [vesting proxy contract address] --amount [amount] [--token [game token address]]
 npx hardhat vesting:prepare [--signer [signer] --password [password]] --beneficiary [a beneficiary address] --amount [amount] [--initial [initial unlocked amount]] [--vesting [vesting proxy]] [--token [game token]] [--period [unlock period hours]] [--duration [duration]]
@@ -296,7 +313,7 @@ npx hardhat --network baobab vesting:setstart --start "2022-05-01 09:00:00"
   - `--beacon`(optional): 기 배포된 beacon 컨트랙트를 지정합니다. 생략시 `~/.iskra-console/deployed/vesting-impl-address.json`의 beacon 주소를 사용합니다.
 
 ```
-ex) 
+ex)
 npx hardhat --network baobab vesting:one_stop_setup --beneficiary 0xc4417F73DaC656337cEcfee8c784130f08be4FA7 --amount 10000 --start "2022-02-01 23:00:00" --duration 12
 ============Args================
 {
