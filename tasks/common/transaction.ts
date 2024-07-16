@@ -2,7 +2,7 @@ import { task } from "hardhat/config";
 import { bigintToString } from "./util";
 
 task("getTransaction", "query transaction by the hash of it")
-    .addParam("hash", "transaction hash")
+    .addPositionalParam("hash", "transaction hash")
     .setAction(async (taskArgs, hre) => {
         console.log(`=== INPUT ===`);
         console.log(`hash: ${taskArgs.hash}`);

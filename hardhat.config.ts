@@ -17,6 +17,7 @@ import { createProviderProxy } from "./scripts/util/provider-proxy";
 import "./scripts/util/type-extensions";
 import "./tasks/common/call";
 import "./tasks/common/deploy";
+import "./tasks/common/flatten";
 import "./tasks/common/signer";
 import "./tasks/common/transaction";
 import "./tasks/common/wallet";
