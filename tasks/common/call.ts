@@ -1,7 +1,11 @@
-import { Contract, Signer } from "ethers";
 import { FunctionFragment, Interface } from "@ethersproject/abi";
-import { subtask, task, types } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
+import appRoot from "app-root-path";
+import { Contract, Signer } from "ethers";
+import fs from "fs";
+import { subtask, task, types } from "hardhat/config";
+import path from "path";
+
 import { bigintToString, parseCallArgs, printResult } from "./util";
 
 subtask("call-internal")
@@ -97,8 +101,27 @@ task("call", "Call a function of contract")
         console.log(`chunkingLimit: ${taskArgs.chunkingLimit}`);
         console.log(`=============\n`);
 
-        const artifact = await hre.artifacts.readArtifact(taskArgs.contract);
-        const iface = new Interface(artifact.abi);
+        let iface;
+        const abiRoot = path.join(appRoot.path, "abis-imported");
+        for (const abi of fs.readdirSync(abiRoot)) {
+            const dot = abi.lastIndexOf(".");
+            let abiName = abi.slice(0, dot);
+            if (abiName === taskArgs.contract) {
+                iface = new Interface(
+                    fs.readFileSync(
+                        path.join(appRoot.path, "abis-imported", abi),
+                        "utf8"
+                    )
+                );
+                break;
+            }
+        }
+        if (!iface) {
+            const artifact = await hre.artifacts.readArtifact(
+                taskArgs.contract
+            );
+            iface = new Interface(artifact.abi);
+        }
         const functionFragment = iface.getFunction(taskArgs.function);
         const args = parseCallArgs(taskArgs.args, functionFragment);
 
