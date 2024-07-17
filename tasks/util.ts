@@ -2,6 +2,7 @@ import { BigNumber } from "ethers";
 import { Fragment, ParamType } from "@ethersproject/abi";
 import fs from "fs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { DateTime } from "luxon";
 import * as readlineSync from "readline-sync";
 
 export function question(title: string, shouldConfirm = false) {
@@ -107,7 +108,7 @@ function parseArray(
 
     if (type.arrayChildren!.baseType.includes("int")) {
         const rangeExp =
-            /^\[(?<start>\d+)..(?<end>\d+)(?<shuffle>\s+shuffle)?\]/m;
+            /^\[(?<start>\d+)..(?<end>\d+)(?<shuffle>\s+shuffle)?]/m;
         let match = rangeExp.exec(input.slice(offset));
         if (match) {
             offset += match.input.length;
@@ -200,7 +201,9 @@ function parsePrimitive(
     let value: string | bigint;
     let parsed = input.slice(start, offset);
     if (type.baseType.includes("int")) {
-        value = parseBigInt(parsed);
+        const timestamp =
+            DateTime.fromISO(parsed, { zone: "utc" }).toMillis() / 1000;
+        value = timestamp ? BigInt(timestamp) : parseBigInt(parsed);
     } else {
         value = parsed.replace(/\\([\[,\]])/gm, "$1");
     }

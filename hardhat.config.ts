@@ -15,12 +15,12 @@ import { ConfigurableGasPriceProvider } from "./scripts/util/configurable-gas-pr
 import { FeeDataFetcher } from "./scripts/util/fee-data-fetcher";
 import { createProviderProxy } from "./scripts/util/provider-proxy";
 import "./scripts/util/type-extensions";
-import "./tasks/common/call";
-import "./tasks/common/deploy";
-import "./tasks/common/flatten";
-import "./tasks/common/signer";
-import "./tasks/common/transaction";
-import "./tasks/common/wallet";
+import "./tasks/call";
+import "./tasks/deploy";
+import "./tasks/flatten";
+import "./tasks/signer";
+import "./tasks/transaction";
+import "./tasks/wallet";
 
 const argv = yargs()
     .env("")
