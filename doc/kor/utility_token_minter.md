@@ -88,6 +88,43 @@ args: 0x3fd5e8e8E9D632B3431B3107528FD2AeAa91A05c,0x399f960ED9D68533CE59774268556
 contract address: 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0
 ```
 
+## 권한 추가하기
+- 배포한 minter 컨트랙트가 발행을 대행할 수 있도록 발행할 Token에 minting 권한을 추가합니다.
+- Token의 owner가 실행하여야 합니다.
+- `npx hardhat call [token] UtilityToken addMinter [minter contract]`
+- 옵션 설명
+    - [token]: 발행할 토큰을 지정합니다.
+    - [minter contract]: minter 컨트랙트를 지정합니다.
+```
+ex)
+npx hardhat call 0x3fd5e8e8E9D632B3431B3107528FD2AeAa91A05c UtilityToken addMinter 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 --network baseSepolia
+=== INPUT ===
+signer: 0x9f7f9a6D9bd84E764a2705211b73CaD811CE357D
+address: 0x3fd5e8e8E9D632B3431B3107528FD2AeAa91A05c
+contract: UtilityToken
+function: addMinter
+args: 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0
+estimateGas: false
+block: undefined
+chunking: undefined
+chunkingLimit: 200
+=============
+
+{
+  "transactionHash": "0x6a81ead2032d8587f81831b6d8112fa5c457a0ed0cdb2239414d2221064b9822",
+  "blockNumber": 1,
+  "blockHash": "0x8d6a51d9049cbedcbcd0b3f5b5ef1bba21c677ea0ada9b57ac6a0824896811d3",
+  "transactionIndex": 0,
+  "from": "0x9f7f9a6D9bd84E764a2705211b73CaD811CE357D",
+  "to": "0x3fd5e8e8E9D632B3431B3107528FD2AeAa91A05c",
+  "gasUsed": "21784",
+  "cumulativeGasUsed": "21784",
+  "effectiveGasPrice": "1250000000",
+  "status": 1
+}
+```
+
+
 ## 토큰 발행 하기
 - 원하는 수량 만큼의 토큰을 발행합니다.
 - 이 때에, 같은 수량의 지불 토큰(xToken)이 recipient 으로부터 미리 지정된 주소(treasury)로 옮겨집니다.
@@ -128,6 +165,4 @@ chunkingLimit: 200
   "effectiveGasPrice": "1250000000",
   "status": 1
 }
-
-
 ```
