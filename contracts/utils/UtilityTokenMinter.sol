@@ -79,9 +79,9 @@ contract UtilityTokenMinter is Ownable2Step, IERC1363Receiver {
 
         updateShareInfo(shareRecipient_, sharePerMillion_);
         if (
-            unlockPeriodHours > 0 ||
-            vestingDuration > 0 ||
-            vestingBeacon != address(0)
+            vestingBeacon_ != address(0) ||
+            unlockPeriodHours_ > 0 ||
+            vestingDuration_ > 0
         ) {
             updateShareVestingInfo(
                 vestingBeacon_,
