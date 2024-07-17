@@ -78,11 +78,17 @@ contract UtilityTokenMinter is Ownable2Step, IERC1363Receiver {
         treasury = treasury_;
 
         updateShareInfo(shareRecipient_, sharePerMillion_);
-        updateShareVestingInfo(
-            vestingBeacon_,
-            unlockPeriodHours_,
-            vestingDuration_
-        );
+        if (
+            vestingBeacon_ != address(0) ||
+            unlockPeriodHours_ > 0 ||
+            vestingDuration_ > 0
+        ) {
+            updateShareVestingInfo(
+                vestingBeacon_,
+                unlockPeriodHours_,
+                vestingDuration_
+            );
+        }
     }
 
     function onTransferReceived(
@@ -133,6 +139,13 @@ contract UtilityTokenMinter is Ownable2Step, IERC1363Receiver {
                 require(
                     shareAmount % 10**_SUPPORTED_DECIMALS == 0,
                     "Vesting for sub-decimal amounts are not supported"
+                );
+
+                require(
+                    unlockPeriodHours > 0 &&
+                        vestingDuration > 0 &&
+                        vestingBeacon != address(0),
+                    "Vesting Info is not set"
                 );
 
                 vestingAddress = _createVesting();
