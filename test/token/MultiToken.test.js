@@ -181,4 +181,21 @@ describe("MultiToken", function () {
       expect(await token.uri(tokenId)).to.be.equal(baseUri + tokenUri);
     });
   });
+
+  describe("notifyMetadataUpdate", function () {
+    let token;
+    const tokenId = 1;
+
+    beforeEach(async function () {
+      token = await MultiToken.deploy(uri, name, false, false);
+      await token.deployed();
+      await token.mint(deployer.address, tokenId, 1, "0x");
+    });
+
+    it("should emit event URI when calling notifyMetadataUpdate", async function () {
+      await expect(token.notifyMetadataUpdate(10))
+        .emit(token, "URI")
+        .withArgs(uri, 10);
+    });
+  });
 });

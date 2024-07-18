@@ -26,6 +26,7 @@ contract MultiToken is
 
     mapping(address => bool) public burnApprovals;
     mapping(address => bool) public mintApprovals;
+    mapping(address => bool) public metadataOperators;
 
     // NOTE:
     // Having a single name is not appropriate for the original ERC1155.
@@ -35,6 +36,11 @@ contract MultiToken is
     event BurnApproval(address indexed burner, bool indexed approved);
 
     event MintApproval(address indexed minter, bool indexed approved);
+
+    event MetadataOperatorPermission(
+        address indexed operator,
+        bool indexed grant
+    );
 
     constructor(
         string memory uri_,
@@ -57,19 +63,32 @@ contract MultiToken is
         return ERC1155URIStorage.uri(tokenId);
     }
 
-    function setURI(string calldata uri_) external onlyOwner {
+    function setURI(string calldata uri_)
+        external
+        hasMetadataOperatorPermission
+    {
         _setURI(uri_);
     }
 
     function setTokenURI(uint256 tokenId, string calldata tokenURI_)
         public
-        onlyOwner
+        hasMetadataOperatorPermission
     {
         _setURI(tokenId, tokenURI_);
     }
 
-    function setBaseURI(string calldata baseURI) public onlyOwner {
+    function setBaseURI(string calldata baseURI)
+        public
+        hasMetadataOperatorPermission
+    {
         _setBaseURI(baseURI);
+    }
+
+    function notifyMetadataUpdate(uint256 tokenId)
+        external
+        hasMetadataOperatorPermission
+    {
+        emit URI(uri(tokenId), tokenId);
     }
 
     modifier whenPausableEnabled() {
@@ -94,6 +113,14 @@ contract MultiToken is
         require(
             _msgSender() == owner() || mintApprovals[_msgSender()],
             "MultiToken: the sender does not have permission to mint"
+        );
+        _;
+    }
+
+    modifier hasMetadataOperatorPermission() {
+        require(
+            _msgSender() == owner() || metadataOperators[_msgSender()],
+            "MultiToken: the sender does not have permission to operate metadata"
         );
         _;
     }
@@ -123,6 +150,14 @@ contract MultiToken is
     {
         mintApprovals[minter] = approved;
         emit MintApproval(minter, approved);
+    }
+
+    function setMetadataOperatorPermission(address operator, bool grant)
+        external
+        onlyOwner
+    {
+        metadataOperators[operator] = grant;
+        emit MetadataOperatorPermission(operator, grant);
     }
 
     function mint(

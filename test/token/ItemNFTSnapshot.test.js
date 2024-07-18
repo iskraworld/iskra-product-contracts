@@ -55,9 +55,10 @@ describe("ItemNFTSnapshot", function () {
     });
 
     it("changes base uri and emits the eventlog", async function () {
-      await expect(this.contract.setBaseURI(newURI))
-        .emit(this.contract, "SetBaseURI")
-        .withArgs(newURI);
+      await expect(this.contract.setBaseURI(newURI)).emit(
+        this.contract,
+        "BatchMetadataUpdate"
+      );
       expect(await this.contract.tokenURI(1)).to.be.equal(
         newURI + firstTokenId
       );
@@ -66,7 +67,9 @@ describe("ItemNFTSnapshot", function () {
     it("reverts when the sender is not owner", async function () {
       await expect(
         this.contract.connect(other).setBaseURI(newURI)
-      ).revertedWith("Ownable: caller is not the owner");
+      ).revertedWith(
+        "ItemNFTSnapshot: the sender does not have permission to operate metadata"
+      );
       expect(await this.contract.tokenURI(1)).to.be.equal(uri + firstTokenId);
     });
   });
@@ -231,6 +234,31 @@ describe("ItemNFTSnapshot", function () {
     });
   });
 
+  describe("setMetadataOperatorPermission", function () {
+    let contract;
+    let owner, other;
+
+    beforeEach(async function () {
+      contract = this.contract;
+      [owner, other] = this.signers;
+    });
+
+    it("grant properly if sender is owner", async function () {
+      await expect(contract.setMetadataOperatorPermission(other.address, true))
+        .emit(contract, "MetadataOperatorPermission")
+        .withArgs(other.address, true);
+      expect(await contract.metadataOperators(other.address)).to.be.equal(true);
+    });
+
+    it("reverts when the sender is not owner", async function () {
+      await expect(
+        contract
+          .connect(other)
+          .setMetadataOperatorPermission(other.address, true)
+      ).revertedWith("Ownable: caller is not the owner");
+    });
+  });
+
   describe("Snapshot", function () {
     let mintDate;
     const tokenId = 100;
@@ -372,6 +400,27 @@ describe("ItemNFTSnapshot", function () {
           expect(owner).eq(other.address);
         }
       }
+    });
+  });
+
+  describe("notifyMetadataUpdate", function () {
+    let token;
+    const tokenId = 1;
+
+    beforeEach(async function () {
+      contract = this.contract;
+    });
+
+    it("should emit event MetadataUpdate when calling notifyMetadataUpdate with single id", async function () {
+      await expect(contract.notifyMetadataUpdate(10, 10))
+        .emit(contract, "MetadataUpdate")
+        .withArgs(10);
+    });
+
+    it("should emit event BatchMetadataUpdate when calling notifyMetadataUpdate with id range", async function () {
+      await expect(contract.notifyMetadataUpdate(10, 12))
+        .emit(contract, "BatchMetadataUpdate")
+        .withArgs(10, 12);
     });
   });
 });
