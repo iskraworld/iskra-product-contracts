@@ -148,6 +148,10 @@ contract ItemNFTSnapshot is
         external
         onlyOwner
     {
+        require(
+            metadataOperators[operator] != grant,
+            "ItemNFTSnapshot: the setting params are already the same as the current state."
+        );
         metadataOperators[operator] = grant;
         emit MetadataOperatorPermission(operator, grant);
     }

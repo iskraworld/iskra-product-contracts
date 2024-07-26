@@ -137,6 +137,10 @@ contract ItemNFT is
         external
         onlyOwner
     {
+        require(
+            metadataOperators[operator] != grant,
+            "ItemNFT: the setting params are already the same as the current state."
+        );
         metadataOperators[operator] = grant;
         emit MetadataOperatorPermission(operator, grant);
     }
