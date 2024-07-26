@@ -10,24 +10,35 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
+import {IERC4906} from "./extensions/IERC4906.sol";
+
 // ItemNFT features
 //  - ERC721 basic functions
 //  - configurable for burnable (defined at construction)
 //  - defense for transferring tokens to the token contract itself
 contract ItemNFT is
+    IERC4906,
     ERC721Enumerable,
     ERC721URIStorage,
     ERC721Burnable,
     Ownable2Step
 {
+    bytes4 private constant ERC4906_INTERFACE_ID = bytes4(0x49064906);
+
     bool public immutable burnable;
     mapping(address => bool) public burnApprovals;
     mapping(address => bool) public mintApprovals;
+    mapping(address => bool) public metadataOperators;
     string public baseURI;
 
     event BurnApproval(address indexed burner, bool indexed approved);
 
     event MintApproval(address indexed minter, bool indexed approved);
+
+    event MetadataOperatorPermission(
+        address indexed operator,
+        bool indexed grant
+    );
 
     constructor(
         string memory name_,
@@ -42,10 +53,12 @@ contract ItemNFT is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable)
+        override(IERC165, ERC721, ERC721Enumerable)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return
+            interfaceId == ERC4906_INTERFACE_ID ||
+            super.supportsInterface(interfaceId);
     }
 
     modifier whenBurnableEnabled() {
@@ -65,6 +78,14 @@ contract ItemNFT is
         require(
             _msgSender() == owner() || mintApprovals[_msgSender()],
             "ItemNFT: the sender does not have permission to mint"
+        );
+        _;
+    }
+
+    modifier hasMetadataOperatorPermission() {
+        require(
+            _msgSender() == owner() || metadataOperators[_msgSender()],
+            "ItemNFT: the sender does not have permission to operate metadata"
         );
         _;
     }
@@ -112,11 +133,24 @@ contract ItemNFT is
         emit MintApproval(minter, approved);
     }
 
-    function setTokenURI(uint256 tokenId, string calldata _tokenURI)
-        public
+    function setMetadataOperatorPermission(address operator, bool grant)
+        external
         onlyOwner
     {
-        _setTokenURI(tokenId, _tokenURI);
+        require(
+            metadataOperators[operator] != grant,
+            "ItemNFT: the setting params are already the same as the current state."
+        );
+        metadataOperators[operator] = grant;
+        emit MetadataOperatorPermission(operator, grant);
+    }
+
+    function setTokenURI(uint256 tokenId, string calldata tokenURI)
+        public
+        hasMetadataOperatorPermission
+    {
+        _setTokenURI(tokenId, tokenURI);
+        _notifyMetadataUpdate(tokenId, tokenId);
     }
 
     function tokenURI(uint256 tokenId)
@@ -132,8 +166,29 @@ contract ItemNFT is
         return baseURI;
     }
 
-    function setBaseURI(string memory uri_) public onlyOwner {
+    function setBaseURI(string memory uri_)
+        public
+        hasMetadataOperatorPermission
+    {
         baseURI = uri_;
+        _notifyMetadataUpdate(0, type(uint256).max);
+    }
+
+    function notifyMetadataUpdate(uint256 fromTokenId, uint256 toTokenId)
+        external
+        hasMetadataOperatorPermission
+    {
+        _notifyMetadataUpdate(fromTokenId, toTokenId);
+    }
+
+    function _notifyMetadataUpdate(uint256 fromTokenId, uint256 toTokenId)
+        internal
+    {
+        if (fromTokenId == toTokenId) {
+            emit MetadataUpdate(fromTokenId);
+        } else {
+            emit BatchMetadataUpdate(fromTokenId, toTokenId);
+        }
     }
 
     function _beforeTokenTransfer(
