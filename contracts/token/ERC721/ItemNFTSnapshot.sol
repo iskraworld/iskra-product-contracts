@@ -156,11 +156,11 @@ contract ItemNFTSnapshot is
         emit MetadataOperatorPermission(operator, grant);
     }
 
-    function setTokenURI(uint256 tokenId, string calldata tokenURI)
+    function setTokenURI(uint256 tokenId, string calldata tokenURI_)
         public
         hasMetadataOperatorPermission
     {
-        _setTokenURI(tokenId, tokenURI);
+        _setTokenURI(tokenId, tokenURI_);
         _notifyMetadataUpdate(tokenId, tokenId);
     }
 

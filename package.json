@@ -1,7 +1,7 @@
 {
   "name": "@iskraworld/iskra-product-contracts",
   "description": "ISKRA tokens(ERC20, ERC721, ERC1155), vesting contracts and ETC",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "scripts": {
     "compile": "hardhat compile",
     "pretest": "hardhat compile",

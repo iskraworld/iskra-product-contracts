@@ -735,7 +735,7 @@
       },
       {
         "internalType": "string",
-        "name": "tokenURI",
+        "name": "tokenURI_",
         "type": "string"
       }
     ],
