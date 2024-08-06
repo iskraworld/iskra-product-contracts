@@ -127,3 +127,11 @@ contract address: 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0
 - npx hardhat call [token address] ItemNFT setBurnApproval [burner] [approved]
   - `npx hardhat call 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 ItemNFT setBurnApproval 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 true --network baseSepolia`
   - account에게 burn permission을 부여/박탈 합니다.
+- npx hardhat call [token address] ItemNFT setMetadataOperatorPermission [operator] [grant]
+    - `npx hardhat call 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 ItemNFT setMetadataOperatorPermission 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 true --network baseSepolia`
+    - account에게 metadata update notification 권한을 부여/박탈 합니다.
+
+## metadata notification
+- npx hardhat call [token address] ItemNFT notifyMetadataUpdate [fromTokenId] [toTokenId]
+    - `npx hardhat call 0x525d7E8b856f59dFD84ebE58241302BDc40B0ee0 ItemNFT notifyMetadataUpdate 101 200 --network baseSepolia`
+    - metadata 변경 이벤트를 발생시켜 3rd party가 meatadata refresh 가능하게 합니다.
